@@ -1,0 +1,26 @@
+#启动sql服务
+net start mysql
+
+#停止sql服务
+net stop mysql
+
+#连接到sql
+mysql -h 127.0.0.1 -u root -p
+
+#显示数据库
+show databases;
+
+#使用数据库
+use database_name;
+
+#显示表
+show tables；
+
+#显示表结构
+desc tabl_name;
+
+#查询表中列的注释信息
+select * from information_schema.columns where table_schema = "fastim" and table_name = "users";
+
+#查询列名和注释
+select column_name, column_comment from information_schema.columns where table_schema ='fastim' and table_name = 'users';
