@@ -58,7 +58,7 @@ public class User extends BaseEntity{
 		return "User [id=" + id + ", userName=" + userName + ", passwd=" + passwd + ", nickName=" + nickName
 				+ ", registDate=" + registDate + "]";
 	}
-	
+
 	@Override
 	public void setBySql(ResultSet rs) {
 		// TODO Auto-generated method stub
@@ -70,7 +70,7 @@ public class User extends BaseEntity{
 		userName = getString(rs, "user_name");
 		passwd = getString(rs, "passwd");
 		nickName = getString(rs, "nick_name");
-		registDate = getString(rs, "regist_data");
+		registDate = getString(rs, "regist_date");
 	}
 	
 }

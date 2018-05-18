@@ -16,7 +16,16 @@ public class ClientSocket {
 	protected SocketSender mSocketSender;
 	protected SocketSender.ISocketSender senderListener;
 	protected String chatId;
+	protected String deviceType;
 	
+	public String getDeviceType() {
+		return deviceType;
+	}
+
+	public void setDeviceType(String deviceType) {
+		this.deviceType = deviceType;
+	}
+
 	public ClientSocket(String host, int port) throws UnknownHostException, IOException  {
 		super();
 		// TODO Auto-generated constructor stub
@@ -70,7 +79,7 @@ public class ClientSocket {
 	
 	public void closeConn() {
 		if(mSocket != null) {
-			new UserDao().loginOut(chatId);
+			new UserDao().loginOut(chatId, deviceType);
 			try {
 				stopRec();
 				stopSend();

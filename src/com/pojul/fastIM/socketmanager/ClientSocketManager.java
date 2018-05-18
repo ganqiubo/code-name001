@@ -1,29 +1,39 @@
 package com.pojul.fastIM.socketmanager;
 
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import com.pojul.fastIM.dao.UserDao;
+import com.pojul.fastIM.entity.LoginMessage;
+import com.pojul.fastIM.entity.LoginoutMessage;
 import com.pojul.fastIM.entity.response.LoginResponse;
 import com.pojul.fastIM.entity.response.Response;
 import com.pojul.fastIM.transmit.Transmitor;
 import com.pojul.fastIM.utils.Util;
 import com.pojul.objectsocket.message.BaseMessage;
-import com.pojul.objectsocket.message.LoginMessage;
-import com.pojul.objectsocket.message.LoginoutMessage;
 import com.pojul.objectsocket.message.MessageHeader;
 import com.pojul.objectsocket.message.StringFile;
 import com.pojul.objectsocket.socket.ClientSocket;
 import com.pojul.objectsocket.socket.SocketReceiver;
 import com.pojul.objectsocket.utils.LogUtil;
+import com.sun.org.apache.bcel.internal.generic.I2F;
 
 import sun.rmi.runtime.Log;
 
 public class ClientSocketManager {
 
 	private static final String TAG = "ClientSocketManager";
+	private static ArrayList<String> supportPlatform = new ArrayList<String>(){{
+		add("Android");
+		add("windows");
+		add("IOS");
+		add("ubuntu");
+	}};
 	
 	private static ClientSocketManager mClientSocketManager;
-	public static LinkedHashMap<String, ClientSocket> clientSockets = new LinkedHashMap<String, ClientSocket>();
+	public static LinkedHashMap<String, HashMap<String, ClientSocket>> clientSockets = 
+			new LinkedHashMap<String, HashMap<String, ClientSocket>>();
 	
 	public static ClientSocketManager getInstance() {
 		if(mClientSocketManager == null) {
@@ -38,8 +48,12 @@ public class ClientSocketManager {
 	
 	public void addClientSocket(ClientSocket mClientSocket) {
 		synchronized (clientSockets) {
-			clientSockets.put(mClientSocket.getChatId(), mClientSocket);
-			LogUtil.i(TAG, "addClientSocket current clientSockets size: " + clientSockets.size());
+			if(clientSockets.get(mClientSocket.getChatId()) == null) {
+				HashMap<String, ClientSocket> tempClientMap = new HashMap<String, ClientSocket>();
+				clientSockets.put(mClientSocket.getChatId(), tempClientMap);
+			}
+			clientSockets.get(mClientSocket.getChatId()).put(mClientSocket.getDeviceType(), mClientSocket);
+			LogUtil.i(TAG, "addClientSocket current online users size: " + clientSockets.size());
 		}
 	}
 
@@ -109,8 +123,12 @@ public class ClientSocketManager {
 
 	protected void Login(ClientSocket mClientSocket, LoginMessage message) {
 		// TODO Auto-generated method stub
-		String loginInfo = new UserDao().loginByUserName(message);
 		int code = 100;
+		if(supportPlatform.indexOf(message.getDeviceType()) == -1) {
+			mClientSocket.sendDataAndClose(new LoginResponse(code, "不支持的设备类型",""));
+			return;
+		} 
+		String loginInfo = new UserDao().loginByUserName(message);
 		if("success".equals(loginInfo)) {
 			mClientSocket.setChatId(message.getUserName());
 			addClientSocket(mClientSocket);

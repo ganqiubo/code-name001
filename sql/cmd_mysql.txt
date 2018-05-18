@@ -1,3 +1,6 @@
+#修改root密码
+mysqladmin -u root password
+
 #启动sql服务
 net start mysql
 

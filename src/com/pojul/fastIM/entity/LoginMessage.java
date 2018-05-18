@@ -1,10 +1,19 @@
-package com.pojul.objectsocket.message;
+package com.pojul.fastIM.entity;
+
+import com.pojul.objectsocket.message.BaseMessage;
 
 public class LoginMessage extends BaseMessage{
 
 	private String userName;
 	private String PassWd;
+	private String deviceType;
 
+	public String getDeviceType() {
+		return deviceType;
+	}
+	public void setDeviceType(String deviceType) {
+		this.deviceType = deviceType;
+	}
 	public String getUserName() {
 		return userName;
 	}

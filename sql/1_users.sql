@@ -6,6 +6,6 @@ create table users(
 	regist_date char(20) not null COMMENT '注册日期'
 );
 
-#insert into users (user_name,passwd,regist_data) values("Tony","123456","2018-06-24");
-#insert into users (user_name,passwd,regist_data) values("Jack","000000","2017-02-04");
-#insert into users (user_name,passwd,regist_data) values("root","111111","2011-11-11");
+#insert into users (user_name,passwd,regist_date) values("Tony","123456","2018-06-24");
+#insert into users (user_name,passwd,regist_date) values("Jack","000000","2017-02-04");
+#insert into users (user_name,passwd,regist_date) values("root","111111","2011-11-11");

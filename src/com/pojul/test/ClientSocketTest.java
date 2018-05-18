@@ -8,10 +8,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import com.pojul.fastIM.entity.LoginMessage;
+import com.pojul.fastIM.entity.LoginStatus;
+import com.pojul.fastIM.entity.LoginoutMessage;
 import com.pojul.fastIM.entity.response.LoginResponse;
 import com.pojul.objectsocket.message.BaseMessage;
-import com.pojul.objectsocket.message.LoginMessage;
-import com.pojul.objectsocket.message.LoginoutMessage;
 import com.pojul.objectsocket.message.MessageHeader;
 import com.pojul.objectsocket.message.MulitMessage;
 import com.pojul.objectsocket.message.StringFile;
@@ -194,6 +195,7 @@ public class ClientSocketTest {
 			LoginMessage mLoginMessage = new LoginMessage();
 			mLoginMessage.setUserName("Tony");
 			mLoginMessage.setPassWd("123456");
+			mLoginMessage.setDeviceType("windows");
 			mClientSocket.sendData(mLoginMessage);
 			
 			/*try {

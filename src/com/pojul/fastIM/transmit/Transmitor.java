@@ -8,10 +8,10 @@ public class Transmitor {
 
 	public void transmitMessage(BaseMessage message) {
 		synchronized (ClientSocketManager.clientSockets) {
-			ClientSocket mClientSocket = ClientSocketManager.clientSockets.get(message.getTo());
+			/*ClientSocket mClientSocket = ClientSocketManager.clientSockets.get(message.getTo());
 			if(mClientSocket != null) {
 				mClientSocket.sendData(message);
-			}
+			}*/
 		}
 	}
 	
