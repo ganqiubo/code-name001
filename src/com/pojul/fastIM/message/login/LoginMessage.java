@@ -1,4 +1,4 @@
-package com.pojul.fastIM.entity;
+package com.pojul.fastIM.message.login;
 
 import com.pojul.objectsocket.message.BaseMessage;
 

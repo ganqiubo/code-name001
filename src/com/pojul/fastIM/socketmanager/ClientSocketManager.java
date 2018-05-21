@@ -5,11 +5,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import com.pojul.fastIM.dao.UserDao;
-import com.pojul.fastIM.entity.LoginMessage;
-import com.pojul.fastIM.entity.LoginoutMessage;
-import com.pojul.fastIM.entity.response.LoginResponse;
-import com.pojul.fastIM.entity.response.Response;
-import com.pojul.fastIM.transmit.Transmitor;
+import com.pojul.fastIM.message.chat.ChatMessage;
+import com.pojul.fastIM.message.login.LoginMessage;
+import com.pojul.fastIM.message.login.LoginoutMessage;
+import com.pojul.fastIM.message.response.LoginResponse;
+import com.pojul.fastIM.message.response.Response;
+import com.pojul.fastIM.transmitor.UserTransmitor;
 import com.pojul.fastIM.utils.Util;
 import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.message.MessageHeader;
@@ -69,7 +70,7 @@ public class ClientSocketManager {
 		mClientSocket.setRecListener(new SocketReceiver.ISocketReceiver() {
 			
 			boolean isFirstRead = true;
-			Transmitor mTransmitor = new Transmitor();
+			UserTransmitor mTransmitor = new UserTransmitor();
 			
 			@Override
 			public void onReadHead(MessageHeader header) {
@@ -102,7 +103,10 @@ public class ClientSocketManager {
 				}else if(message instanceof LoginoutMessage) {
 					LoginoutMessage(mClientSocket, (LoginoutMessage)message);
 				}else {
-					mTransmitor.transmitMessage(message);
+					if(message instanceof ChatMessage) {
+						mTransmitor.transmitMessage((ChatMessage)message);
+					}
+					
 				}
 				
 			}
@@ -131,6 +135,7 @@ public class ClientSocketManager {
 		String loginInfo = new UserDao().loginByUserName(message);
 		if("success".equals(loginInfo)) {
 			mClientSocket.setChatId(message.getUserName());
+			mClientSocket.setDeviceType(message.getDeviceType());
 			addClientSocket(mClientSocket);
 			LogUtil.i(TAG, "login success");
 			code = 200;

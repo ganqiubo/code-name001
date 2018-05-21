@@ -9,8 +9,6 @@ public class BaseMessage {
 	protected String to;
 	protected String sendTime;
 	protected String receiveTime;
-	protected MessageHeader mMessageHeader;
-	protected String chatType;
 	
 	public BaseMessage() {
 		super();
@@ -18,12 +16,6 @@ public class BaseMessage {
 		Date ss = new Date();  
 		SimpleDateFormat format0 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
 		this.sendTime = format0.format(ss.getTime());
-	}
-	public String getChatType() {
-		return chatType;
-	}
-	public void setChatType(String chatType) {
-		this.chatType = chatType;
 	}
 	public String getFrom() {
 		return from;
@@ -48,11 +40,5 @@ public class BaseMessage {
 	}
 	public void setReceiveTime(String receiveTime) {
 		this.receiveTime = receiveTime;
-	}
-	public MessageHeader getmMessageHeader() {
-		return mMessageHeader;
-	}
-	public void setmMessageHeader(MessageHeader mMessageHeader) {
-		this.mMessageHeader = mMessageHeader;
 	}
 }

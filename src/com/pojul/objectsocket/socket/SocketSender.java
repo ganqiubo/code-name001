@@ -25,7 +25,8 @@ public class SocketSender{
 	protected boolean isParsering = false;
 	protected DataOutputStream dos;
 	protected boolean stopSend = false;
-	private boolean closeConnWhenFinish = false;
+	protected boolean closeConnWhenFinish = false; 
+	protected long messageCheckInterval = 500;
 	
 	public SocketSender(Socket mSocket, ClientSocket clientSocket) {
 		super();
@@ -41,6 +42,14 @@ public class SocketSender{
 		startSendThread();
 	}
 	
+	public long getMessageCheckInterval() {
+		return messageCheckInterval;
+	}
+
+	public void setMessageCheckInterval(long messageCheckInterval) {
+		this.messageCheckInterval = messageCheckInterval;
+	}
+
 	public void startSendThread() {
 		if(mSocket == null) {
 			return;
@@ -65,6 +74,12 @@ public class SocketSender{
 							}
 							LogUtil.i(TAG, e.toString());
 						}
+					}
+					try {
+						Thread.sleep(messageCheckInterval);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						LogUtil.i(TAG, e1.toString());
 					}
 				}
 			}

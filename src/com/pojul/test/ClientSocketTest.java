@@ -8,10 +8,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.pojul.fastIM.entity.LoginMessage;
 import com.pojul.fastIM.entity.LoginStatus;
-import com.pojul.fastIM.entity.LoginoutMessage;
-import com.pojul.fastIM.entity.response.LoginResponse;
+import com.pojul.fastIM.message.chat.TextChatMessage;
+import com.pojul.fastIM.message.login.LoginMessage;
+import com.pojul.fastIM.message.login.LoginoutMessage;
+import com.pojul.fastIM.message.response.LoginResponse;
+import com.pojul.fastIM.utils.Constant;
 import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.message.MessageHeader;
 import com.pojul.objectsocket.message.MulitMessage;
@@ -44,10 +46,8 @@ public class ClientSocketTest {
 		put("D:\\testpic\\a2.jpg", "a2.jpg");
 		put("C:\\Users\\24439\\Desktop\\o5_build_0422\\05A测试20180422.xlsx", "05A测试20180422.xlsx");
 	}};
-	
-	public static Socket socket;
+
 	public static ClientSocket mClientSocket;
-	public static int which;
 	
 	public static void main(String[] args) {
 		
@@ -57,26 +57,28 @@ public class ClientSocketTest {
 		
 		//testSendMulti();
 		
-		try {
+		/*try {
 			mClientSocket = new ClientSocket("127.0.0.1", 57142);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		mClientSocket.setRecListener(new RecListener());
+		mClientSocket.setRecListener(new RecListener());*/
 		
-		which = 1;
-		for(int i = 0; i < 1; i++) {
-			login();
+		chat(2);
+		
+		for(int i = 0; i < 100000; i++) {
+			chat(2);
 			try {
-				Thread.sleep(1);
+				System.out.println("chat------>" + i);
+				Thread.sleep(200);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-    }  
+    }
 	
 	static void testSendMulti(){
 		Socket socket;
@@ -190,54 +192,88 @@ public class ClientSocketTest {
 		}
 	}
 	
-	static void login() {
+	static void login(int which) {
 		if(which%2 == 1) {
 			LoginMessage mLoginMessage = new LoginMessage();
 			mLoginMessage.setUserName("Tony");
 			mLoginMessage.setPassWd("123456");
 			mLoginMessage.setDeviceType("windows");
 			mClientSocket.sendData(mLoginMessage);
-			
-			/*try {
-				Thread.sleep(18000);
-				TextMessage mTextMessage = new TextMessage();
-				mTextMessage.setFrom(mClientSocket.getChatId());
-				mTextMessage.setTo("Jack");
-				mTextMessage.setText("哈喽。");
-				mClientSocket.sendData(mTextMessage);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-			
-			/*try {
-				Thread.sleep(10000);
-				LoginoutMessage mLoginoutMessage = new LoginoutMessage();
-				mClientSocket.sendData(mLoginoutMessage);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}*/
-			
 		}else {
 			LoginMessage mLoginMessage = new LoginMessage();
 			mLoginMessage.setUserName("Jack");
 			mLoginMessage.setPassWd("000000");
 			mClientSocket.sendData(mLoginMessage);
+		}
+		
+	}
+	
+	static void chat(int which) {
+		if (which % 3 == 1) {
+			LoginMessage mLoginMessage = new LoginMessage();
+			mLoginMessage.setUserName("Tony");
+			mLoginMessage.setPassWd("123456");
+			mLoginMessage.setDeviceType("windows");
+			mClientSocket.sendData(mLoginMessage);
+
 			
 			try {
-				Thread.sleep(18000);
-				TextMessage mTextMessage = new TextMessage();
-				mTextMessage.setFrom(mClientSocket.getChatId());
+				Thread.sleep(25000);
+				TextChatMessage mTextMessage = new TextChatMessage();
+				mTextMessage.setFrom("Tony");
+				mTextMessage.setTo("Jack");
+				mTextMessage.setText("哈喽。");
+				mTextMessage.setChatType(Constant.CHAT_TYPE_SINGLE);
+				mClientSocket.sendData(mTextMessage);
+			} catch (InterruptedException e) { // TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			/*try {
+				Thread.sleep(10000);
+				LoginoutMessage mLoginoutMessage = new LoginoutMessage();
+				mClientSocket.sendData(mLoginoutMessage);
+			} catch (InterruptedException e) { // TODO Auto-generated catch block
+				e.printStackTrace();
+			}*/
+			
+
+		} else if(which % 3 == 2){
+			ClientSocket mClientSocket1 = null;
+			try {
+				mClientSocket1 = new ClientSocket("127.0.0.1", 57142);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			//mClientSocket1.setRecListener(new RecListener());
+			
+			LoginMessage mLoginMessage = new LoginMessage();
+			mLoginMessage.setUserName("Tony");
+			mLoginMessage.setPassWd("123456");
+			mLoginMessage.setDeviceType("IOS");
+			mClientSocket1.sendData(mLoginMessage);
+			
+		} else if(which % 3 == 0){
+			LoginMessage mLoginMessage = new LoginMessage();
+			mLoginMessage.setUserName("Jack");
+			mLoginMessage.setPassWd("000000");
+			mLoginMessage.setDeviceType("Android");
+			mClientSocket.sendData(mLoginMessage);
+
+			try {
+				Thread.sleep(20000);
+				TextChatMessage mTextMessage = new TextChatMessage();
+				mTextMessage.setFrom("Jack");
 				mTextMessage.setTo("Tony");
 				mTextMessage.setText("你好！");
+				mTextMessage.setChatType(Constant.CHAT_TYPE_SINGLE);
 				mClientSocket.sendData(mTextMessage);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
 	}
 
 	static class RecListener implements SocketReceiver.ISocketReceiver{
@@ -263,8 +299,8 @@ public class ClientSocketTest {
 					mClientSocket.setChatId(mLoginResponse.getChatId()); 
 				}
 				LogUtil.i(TAG, message.toString());
-			}else if(message instanceof TextMessage) {
-				TextMessage mTextMessage = (TextMessage)message;
+			}else if(message instanceof TextChatMessage) {
+				TextChatMessage mTextMessage = (TextChatMessage)message;
 				LogUtil.i(TAG, "message from " + message.getFrom() + ": " + mTextMessage.getText() );
 			}else {
 				

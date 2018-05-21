@@ -15,6 +15,7 @@ public class ClientSocket {
 	protected SocketReceiver.ISocketReceiver recListener;
 	protected SocketSender mSocketSender;
 	protected SocketSender.ISocketSender senderListener;
+	//chatId为用户名
 	protected String chatId;
 	protected String deviceType;
 	

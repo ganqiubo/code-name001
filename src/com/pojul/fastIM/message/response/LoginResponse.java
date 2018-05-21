@@ -1,4 +1,4 @@
-package com.pojul.fastIM.entity.response;
+package com.pojul.fastIM.message.response;
 
 public class LoginResponse extends Response{
 
@@ -21,8 +21,7 @@ public class LoginResponse extends Response{
 	@Override
 	public String toString() {
 		return "LoginResponse [chatId=" + chatId + ", code=" + code + ", message=" + message + ", from=" + from
-				+ ", to=" + to + ", sendTime=" + sendTime + ", receiveTime=" + receiveTime + ", mMessageHeader="
-				+ mMessageHeader + ", chatType=" + chatType + "]";
+				+ ", to=" + to + ", sendTime=" + sendTime + ", receiveTime=" + receiveTime + "]";
 	}
 
 }

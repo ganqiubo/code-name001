@@ -30,7 +30,7 @@ public class MulitMessage extends BaseMessage {
 	public String toString() {
 		return "MulitMessage [text=" + text + ", mStringFile1s=" + Arrays.toString(mStringFile1s) + ", mStringFile2s="
 				+ mStringFile2s + ", from=" + from + ", to=" + to + ", sendTime=" + sendTime + ", receiveTime="
-				+ receiveTime + ", mMessageHeader=" + mMessageHeader + ", chatType=" + chatType + "]";
+				+ receiveTime + "]";
 	}
 	
 }

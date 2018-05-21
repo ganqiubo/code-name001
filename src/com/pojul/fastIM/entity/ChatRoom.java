@@ -11,12 +11,12 @@ public class ChatRoom extends BaseEntity{
 	private int maxMember;
 	private String createDate;
 	
-	private ChatRoom() {
+	public ChatRoom() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	private ChatRoom(int id, String chatRoomUid, String chatRoomName, String chatRoomType, int maxMember,
+	public ChatRoom(int id, String chatRoomUid, String chatRoomName, String chatRoomType, int maxMember,
 			String createDate) {
 		super();
 		this.id = id;
@@ -74,13 +74,13 @@ public class ChatRoom extends BaseEntity{
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
+	
+	
 
 	@Override
 	public String toString() {
 		return "ChatRoom [id=" + id + ", chatRoomUid=" + chatRoomUid + ", chatRoomName=" + chatRoomName
-				+ ", chatRoomType=" + chatRoomType + ", maxMember=" + maxMember + ", createDate=" + createDate
-				+ ", from=" + from + ", to=" + to + ", sendTime=" + sendTime + ", receiveTime=" + receiveTime
-				+ ", mMessageHeader=" + mMessageHeader + ", chatType=" + chatType + "]";
+				+ ", chatRoomType=" + chatRoomType + ", maxMember=" + maxMember + ", createDate=" + createDate + "]";
 	}
 
 	@Override

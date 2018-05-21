@@ -1,4 +1,4 @@
-package com.pojul.fastIM.entity.response;
+package com.pojul.fastIM.message.response;
 
 import com.pojul.objectsocket.message.BaseMessage;
 
@@ -37,8 +37,7 @@ public class Response extends BaseMessage{
 	@Override
 	public String toString() {
 		return "Response [code=" + code + ", message=" + message + ", from=" + from + ", to=" + to + ", sendTime="
-				+ sendTime + ", receiveTime=" + receiveTime + ", mMessageHeader=" + mMessageHeader + ", chatType="
-				+ chatType + "]";
+				+ sendTime + "]";
 	}
 	
 }

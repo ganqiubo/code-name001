@@ -2,10 +2,9 @@ package com.pojul.fastIM.entity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.utils.LogUtil;
 
-public class BaseEntity extends BaseMessage{
+public class BaseEntity{
 	
 	public void setBySql(ResultSet rs) {
 	}

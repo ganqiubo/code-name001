@@ -1,9 +1,9 @@
 package com.pojul.fastIM.dao;
 import java.util.List;
 
-import com.pojul.fastIM.entity.LoginMessage;
 import com.pojul.fastIM.entity.LoginStatus;
 import com.pojul.fastIM.entity.User;
+import com.pojul.fastIM.message.login.LoginMessage;
 import com.pojul.fastIM.utils.DaoUtil;
 
 public class UserDao {
@@ -27,7 +27,7 @@ public class UserDao {
 	
 	public boolean isLogin(int userId, LoginMessage mLoginMessage) {
 		String sql = "select * from login_status where user_id = '" + userId + "'" +
-							"and login_device = '" + mLoginMessage.getDeviceType() + "'";
+							"and device_type = '" + mLoginMessage.getDeviceType() + "'";
 		List<LoginStatus> loginStatus = DaoUtil.executeQuery(sql, LoginStatus.class);
 		if(loginStatus == null) {
 			return false;
@@ -47,7 +47,7 @@ public class UserDao {
 
 	public int setLoginStatus(int userId, String deviceType, int loginStatus) {
 		String sql = "update login_status set login_status = '" + loginStatus + 
-				"' where user_id = '" + userId + "' and login_device = '" + deviceType + "'";
+				"' where user_id = '" + userId + "' and device_type = '" + deviceType + "'";
 		return DaoUtil.executeUpdate(sql);
 	}
 	

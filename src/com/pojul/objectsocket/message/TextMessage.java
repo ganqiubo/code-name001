@@ -15,10 +15,6 @@ public class TextMessage extends BaseMessage{
 	@Override
 	public String toString() {
 		return "TextMessage [text=" + text + ", from=" + from + ", to=" + to + ", sendTime=" + sendTime
-				+ ", receiveTime=" + receiveTime + ", mMessageHeader=" + mMessageHeader + ", chatType=" + chatType
-				+ "]";
+				+ ", receiveTime=" + receiveTime + "]";
 	}
-
-	
-	
 }
