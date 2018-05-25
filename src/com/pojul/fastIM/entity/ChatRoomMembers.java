@@ -1,7 +1,6 @@
 package com.pojul.fastIM.entity;
 
 import java.util.List;
-import java.sql.ResultSet;
 
 public class ChatRoomMembers extends BaseEntity{
 

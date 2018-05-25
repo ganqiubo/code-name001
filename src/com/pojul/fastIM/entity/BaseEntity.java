@@ -17,7 +17,7 @@ public class BaseEntity{
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			LogUtil.i(this.getClass().getName(), e.toString());
+			LogUtil.d(this.getClass().getName(), e.toString());
 		}
 		return 0;
 	}
@@ -30,7 +30,7 @@ public class BaseEntity{
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			LogUtil.i(this.getClass().getName(), e.toString());
+			LogUtil.d(this.getClass().getName(), e.toString());
 		}
 		return null;
 	}

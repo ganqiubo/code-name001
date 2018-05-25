@@ -144,7 +144,7 @@ public class SocketEntityParser {
 			parseFile(files.get(i));
 		}
 		mISocketEntityParser.onParser(new byte[] {1});
-		mISocketEntityParser.onParserFinish();
+		mISocketEntityParser.onParserFinish(mBaseMessage);
 	}
 	
 	protected void parseString(String str) throws IOException {

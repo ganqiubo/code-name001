@@ -18,6 +18,7 @@ import com.pojul.objectsocket.utils.LogUtil;
 public class MultiplyChatTest {
 
 	public static ClientSocket mClientSocket;
+	public static boolean run =true;
 	static String from = "";
 	public static List<String[]> listMaps = new ArrayList<String[]>(){{
 		add(new String[] {"Lucy","123123"});
@@ -41,11 +42,17 @@ public class MultiplyChatTest {
 		}
 		mClientSocket.setRecListener(new RecListener());
 		
-		login(8);
+		login(6);
 		
 	}
 	
 	static void login(int which) {
+		/*String[] info = new String[2];//listMaps.get(which);
+		Scanner input = new Scanner(System.in);
+		System.out.println("请输入用户名：");
+		info[0] = input.nextLine();
+		System.out.println("请输入密码：");
+		info[1] = input.nextLine();*/
 		String[] info = listMaps.get(which);
 		from = info[0];
 		LoginMessage mLoginMessage = new LoginMessage();
@@ -54,8 +61,6 @@ public class MultiplyChatTest {
 		mLoginMessage.setDeviceType("windows");
 		mClientSocket.sendData(mLoginMessage);
 		
-		
-		input();
 	}
 	
 	static void input() {
@@ -67,7 +72,7 @@ public class MultiplyChatTest {
 				// TODO Auto-generated method stub
 				Scanner input = new Scanner(System.in);
 				String inputStr = "";
-				while(true) {
+				while(run) {
 					inputStr = input.nextLine();
 					String[] messageTo = inputStr.split(",");
 					if(messageTo.length != 3) {
@@ -112,6 +117,7 @@ public class MultiplyChatTest {
 				LoginResponse mLoginResponse = (LoginResponse)message;
 				if(200 == mLoginResponse.getCode()) {
 					mClientSocket.setChatId(mLoginResponse.getChatId()); 
+					input();
 				}
 				LogUtil.i(getClass().getName(), message.toString());
 			}else if(message instanceof TextChatMessage) {
@@ -131,7 +137,7 @@ public class MultiplyChatTest {
 		@Override
 		public void onError(Exception e) {
 			// TODO Auto-generated method stub
-			
+			run = false;
 		}
 		
 	}

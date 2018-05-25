@@ -135,10 +135,10 @@ public class SocketSender{
 				}
 
 				@Override
-				public void onParserFinish() throws IOException {
+				public void onParserFinish(BaseMessage message) throws IOException {
 					// TODO Auto-generated method stub
 					if(senderListener != null) {
-						senderListener.onSendFinish(mMessage);
+						senderListener.onSendFinish(message);
 					}
 					if(closeConnWhenFinish) {
 						clientSocket.closeConn();

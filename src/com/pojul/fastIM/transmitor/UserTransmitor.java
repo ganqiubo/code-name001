@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import com.pojul.fastIM.dao.ChatRoomDao;
 import com.pojul.fastIM.dao.ChatRoomMembersDao;
+import com.pojul.fastIM.dao.MessageDao;
 import com.pojul.fastIM.entity.ChatRoomMembers;
 import com.pojul.fastIM.entity.User;
 import com.pojul.fastIM.message.chat.ChatMessage;
@@ -21,7 +22,8 @@ import sun.text.resources.cldr.om.FormatData_om;
 public class UserTransmitor {
 
 	private final static String TAG = "UserTransmitor";
-	
+	private MessageDao mmMessageDao = new MessageDao();
+			
 	public void transmitMessage(ChatMessage message) {
 		synchronized (ClientSocketManager.clientSockets) {
 			if(message.getChatType() == Constant.CHAT_TYPE_SINGLE) {
@@ -100,10 +102,10 @@ public class UserTransmitor {
 					mClientSocket.sendData(message);
 				}
 			}
-		}else {
-			//保存未上线转发用户消息，待用户上线后发送
-			
 		}
+		//保存转发用户消息
+		//System.out.println("insertMesage: " + to);
+		mmMessageDao.insertMesage(message, false, to, chatRoomUid);
 	}
 
 	private String getChatRoomUid(ChatMessage message) {

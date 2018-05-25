@@ -1,11 +1,10 @@
 package com.pojul.fastIM.message.chat;
 
-import java.util.Random;
-
+import com.pojul.fastIM.utils.UidUtil;
 import com.pojul.objectsocket.message.BaseMessage;
 
 public class ChatMessage extends BaseMessage{
-	
+
 	protected int chatType;
 	protected String chatUid;
 
@@ -13,7 +12,7 @@ public class ChatMessage extends BaseMessage{
 	public void setFrom(String from) {
 		// TODO Auto-generated method stub
 		super.setFrom(from);
-		this.chatUid = System.currentTimeMillis() + "_" + from + "_" + (int)(Math.random()*20);
+		this.chatUid = UidUtil.getMessageUid(from);
 	}
 
 	public String getChatUid() {

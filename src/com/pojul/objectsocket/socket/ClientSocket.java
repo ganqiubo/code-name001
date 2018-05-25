@@ -5,7 +5,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 import com.pojul.fastIM.dao.UserDao;
-import com.pojul.fastIM.utils.DaoUtil;
 import com.pojul.objectsocket.message.BaseMessage;
 
 public class ClientSocket {
