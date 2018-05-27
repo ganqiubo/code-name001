@@ -8,11 +8,13 @@ import java.util.Map.Entry;
 import com.pojul.fastIM.dao.ChatRoomDao;
 import com.pojul.fastIM.dao.ChatRoomMembersDao;
 import com.pojul.fastIM.dao.MessageDao;
+import com.pojul.fastIM.dao.UserMessageDao;
 import com.pojul.fastIM.entity.ChatRoomMembers;
 import com.pojul.fastIM.entity.User;
+import com.pojul.fastIM.entity.UserMessage;
 import com.pojul.fastIM.message.chat.ChatMessage;
 import com.pojul.fastIM.socketmanager.ClientSocketManager;
-import com.pojul.fastIM.utils.Constant;
+import com.pojul.fastIM.utils.ServerConstant;
 import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.socket.ClientSocket;
 import com.pojul.objectsocket.utils.LogUtil;
@@ -22,12 +24,12 @@ import sun.text.resources.cldr.om.FormatData_om;
 public class UserTransmitor {
 
 	private final static String TAG = "UserTransmitor";
-	private MessageDao mmMessageDao = new MessageDao();
 			
 	public void transmitMessage(ChatMessage message) {
 		synchronized (ClientSocketManager.clientSockets) {
-			if(message.getChatType() == Constant.CHAT_TYPE_SINGLE) {
+			if(message.getChatType() == ServerConstant.CHAT_TYPE_SINGLE) {
 				String chatRoomUid = createSingleChatRoom(message);
+				new MessageDao().insertMesage(message);
 				transmitSingle(message, message.getTo(), chatRoomUid);
 			} else {
 				transmitMultiply(message);
@@ -49,7 +51,7 @@ public class UserTransmitor {
 
 	private void transmitMultiply(ChatMessage message) {
 		// TODO Auto-generated method stub
-		if(message.getChatType() != Constant.CHAT_TYPE_MULTIPLE) {
+		if(message.getChatType() != ServerConstant.CHAT_TYPE_MULTIPLE) {
 			LogUtil.i(TAG, "非群聊消息");
 			return;
 		}
@@ -65,6 +67,7 @@ public class UserTransmitor {
 		if(users == null) {
 			return;
 		}
+		new MessageDao().insertMesage(message);
 		for(int i =0 ; i < users.size(); i++) {
 			User user = users.get(i);
 			transmitSingle(message, user.getUserName(), chatRoomUid);
@@ -105,7 +108,7 @@ public class UserTransmitor {
 		}
 		//保存转发用户消息
 		//System.out.println("insertMesage: " + to);
-		mmMessageDao.insertMesage(message, false, to, chatRoomUid);
+		new UserMessageDao().insertUserMessage(message, false, to, chatRoomUid);
 	}
 
 	private String getChatRoomUid(ChatMessage message) {
@@ -119,7 +122,7 @@ public class UserTransmitor {
 		if(to== null || "".equals(to)) {
 			return null;
 		}
-		if(chatType == Constant.CHAT_TYPE_SINGLE) {
+		if(chatType == ServerConstant.CHAT_TYPE_SINGLE) {
 			return from.compareTo(to) >= 0 ? (from + "_" + to) : (to + "_" + from);
 		}else {
 			return to;

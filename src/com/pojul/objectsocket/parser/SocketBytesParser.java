@@ -106,19 +106,26 @@ public class SocketBytesParser{
 			LogUtil.d(TAG, mSocket.isClosed() + "::" + mSocket.isConnected() + ":hasFile, file byte length = " + fileLength);
 			Pattern pattern = Pattern.compile(StringFile.regexServerStr2);
 			Matcher matcher = pattern.matcher(entityString);
-			StringFile tempSf = null;
+			StringFileIndex stringFileIndex = null;
 			if(matcher.find()) {
-				tempSf = getStringFile(entityString, matcher.start(), matcher.end());
-				LogUtil.d(TAG, "matched StringFile = " + tempSf.toString());
+				stringFileIndex = getStringFile(entityString, matcher.start(), matcher.end());
+				LogUtil.d(TAG, "matched StringFile = " + stringFileIndex.stringFile.toString());
 			}
 			String currentTimeMillis = System.currentTimeMillis() + "_";
 			String fileName = "file_" + currentTimeMillis;
-			if(tempSf != null) {
-				fileName = tempSf.getFileName();
+			if(stringFileIndex.stringFile != null) {
+				fileName = stringFileIndex.stringFile.getFileName();
+				//设置文件存储类型： 0:本地存储; 1:网络存储
+				stringFileIndex.stringFile.setStorageType(1);
+				if(Constant.STORAGE_TYPE == 0) {
+					stringFileIndex.stringFile.setStorageType(0);
+				}
+				stringFileIndex.stringFile.setFilePath(Constant.BASE_URL + currentTimeMillis + fileName);
 				entityString = new StringBuilder(entityString).replace(
-						matcher.start() ,matcher.end(),
-						(Constant.BASE_URL + currentTimeMillis + fileName) ).toString();
-				LogUtil.d(TAG, "matched StringFile URL = " + Constant.BASE_URL + currentTimeMillis + fileName);
+						stringFileIndex.start ,stringFileIndex.end,
+						(new Gson().toJson(stringFileIndex.stringFile)) ).toString();
+				
+				LogUtil.d(TAG, "matched StringFile URL = " + stringFileIndex.stringFile.getFilePath());
 			}
 			if(fileLength > 0) {
 				long tempReadLength = 0;
@@ -140,12 +147,13 @@ public class SocketBytesParser{
 			}
 			
 		}
+		LogUtil.d(TAG, "receive file entityString: " + entityString);
 		mMessageEntity =  (BaseMessage) new Gson().fromJson(entityString, Class.forName(mMessageHeader.getClassName()));
 		mISocketBytesParser.onReadEntity(mMessageEntity);
 		mISocketBytesParser.onReadFinish();
 	}
 	
-	protected StringFile getStringFile(String entityString, int start, int end) {
+	protected StringFileIndex getStringFile(String entityString, int start, int end) {
 		int tempStart = -1;
 		for(int i = start; i > 0; i-- ) {
 			char ch = entityString.charAt(i);
@@ -171,10 +179,23 @@ public class SocketBytesParser{
 		String tempStringFile = entityString.substring(tempStart, (tempEnd + 1));
 		try {
 			StringFile stringFile = new Gson().fromJson(tempStringFile, StringFile.class);
-			return stringFile;
+			StringFileIndex stringFileIndex = new StringFileIndex(tempStart, (tempEnd + 1), stringFile);
+			return stringFileIndex;
 		}catch(Exception e) {
 			return null;
 		}
+	}
+	
+	class StringFileIndex {
+		private StringFileIndex(int start, int end, StringFile stringFile) {
+			super();
+			this.start = start;
+			this.end = end;
+			this.stringFile = stringFile;
+		}
+		int start;
+		int end;
+		StringFile stringFile;
 	}
 	
 	public void stop() {

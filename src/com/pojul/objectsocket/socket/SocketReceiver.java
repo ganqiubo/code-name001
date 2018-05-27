@@ -87,6 +87,9 @@ public class SocketReceiver {
 							if(receiverListener != null) {
 								receiverListener.onError(e);
 							}
+							if(LogUtil.allowD) {
+								e.printStackTrace();
+							}
 							LogUtil.e(TAG, e.toString());
 						}
 					}, recOnce);

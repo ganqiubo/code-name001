@@ -13,7 +13,7 @@ import com.pojul.fastIM.message.chat.TextChatMessage;
 import com.pojul.fastIM.message.login.LoginMessage;
 import com.pojul.fastIM.message.login.LoginoutMessage;
 import com.pojul.fastIM.message.response.LoginResponse;
-import com.pojul.fastIM.utils.Constant;
+import com.pojul.fastIM.utils.ServerConstant;
 import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.message.MessageHeader;
 import com.pojul.objectsocket.message.MulitMessage;
@@ -223,7 +223,7 @@ public class ClientSocketTest {
 				mTextMessage.setFrom("Tony");
 				mTextMessage.setTo("Jack");
 				mTextMessage.setText("哈喽。");
-				mTextMessage.setChatType(Constant.CHAT_TYPE_SINGLE);
+				mTextMessage.setChatType(ServerConstant.CHAT_TYPE_SINGLE);
 				mClientSocket.sendData(mTextMessage);
 			} catch (InterruptedException e) { // TODO Auto-generated catch block
 				e.printStackTrace();
@@ -267,7 +267,7 @@ public class ClientSocketTest {
 				mTextMessage.setFrom("Jack");
 				mTextMessage.setTo("Tony");
 				mTextMessage.setText("你好！");
-				mTextMessage.setChatType(Constant.CHAT_TYPE_SINGLE);
+				mTextMessage.setChatType(ServerConstant.CHAT_TYPE_SINGLE);
 				mClientSocket.sendData(mTextMessage);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

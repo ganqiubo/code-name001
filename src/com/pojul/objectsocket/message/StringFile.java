@@ -10,7 +10,10 @@ public class StringFile {
 	public final static String regexServerStr1 = "\\{.*?\\^0\\#\\#0\\^.*?\\}";
 	public final static String regexServerStr2 = "\\^0\\#\\#0\\^";
 	
+	//本地类型
 	public final static int STORAGE_TYPE_LOCAL = 0;
+	//可访问服务器类型
+	public final static int STORAGE_TYPE_SERVER = 1;
 	
 	protected String fileType;
 	protected String fileName;
@@ -49,6 +52,22 @@ public class StringFile {
 		}else {
 			this.filePath = filePath;
 		}
+	}
+	
+	public int getStorageType() {
+		return storageType;
+	}
+	
+	public void setStorageType(int storageType) {
+		this.storageType = storageType;
+		this.filePath = this.filePath.replace(pathBorderStart, "").replace(pathBorderEnd, "");
+		setFilePath(this.filePath);
+	}
+	
+	@Override
+	public String toString() {
+		return "StringFile [fileType=" + fileType + ", fileName=" + fileName + ", filePath=" + filePath
+				+ ", storageType=" + storageType + "]";
 	}
 	
 }

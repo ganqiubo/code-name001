@@ -12,8 +12,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.pojul.fastIM.dao.MessageDao;
 import com.pojul.fastIM.dao.UserDao;
+import com.pojul.fastIM.dao.UserMessageDao;
 import com.pojul.fastIM.entity.Message;
+import com.pojul.fastIM.entity.UserMessage;
 import com.pojul.fastIM.message.chat.ChatMessage;
+import com.pojul.fastIM.message.chat.TextPicMessage;
 import com.pojul.fastIM.message.login.LoginMessage;
 import com.pojul.fastIM.message.login.LoginoutMessage;
 import com.pojul.fastIM.message.response.LoginResponse;
@@ -113,13 +116,14 @@ public class ClientSocketManager {
 	private void sendUnSendMessage(ClientSocket mClientSocket) {
 		// TODO Auto-generated method stub
 		//List<Message>
-		MessageDao mMessageDao = new MessageDao();
-		List<Message> messages = mMessageDao.getUnSendMessage(mClientSocket.getChatId());
-		if(messages != null) {
-			for(int i = 0; i < messages.size(); i++) {
-				Message message = messages.get(i);
+		List<UserMessage> userMessages = new UserMessageDao().getUnSendMessage(mClientSocket.getChatId());
+		if(userMessages != null) {
+			for(int i = 0; i < userMessages.size(); i++) {
+				UserMessage userMessage = userMessages.get(i);
 				try {
-					BaseMessage mBaseMessage = (BaseMessage) new Gson().fromJson(message.getMessageContent(), Class.forName(message.getMessageClass()));
+					BaseMessage mBaseMessage = (BaseMessage) new Gson().fromJson(
+							userMessage.getMessage().getMessageContent(), 
+							Class.forName(userMessage.getMessage().getMessageClass()));
 					mClientSocket.sendData(mBaseMessage);
 				} catch (JsonSyntaxException | ClassNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -188,16 +192,13 @@ public class ClientSocketManager {
 
 	private void onMessageSendListener(ClientSocket mClientSocket) {
 		// TODO Auto-generated method stub
-		MessageDao mMessageDao = new MessageDao();
 		mClientSocket.setSenderListener(new SocketSender.ISocketSender() {
 			
 			@Override
 			public void onSendFinish(BaseMessage mBaseMessage) {
 				// TODO Auto-generated method stub
-			    //System.out.println("onMessageSendListener onSendFinish: " + mBaseMessage);
 				if(mBaseMessage instanceof ChatMessage) {
-					//System.out.println("onMessageSendListener onSendFinish ChatMessage: " + ((ChatMessage)mBaseMessage).getChatUid());
-					mMessageDao.updateSendStatus( ((ChatMessage)mBaseMessage).getChatUid(), mClientSocket.getChatId(), true);
+					new UserMessageDao().updateSendStatus( ((ChatMessage)mBaseMessage).getChatUid(), mClientSocket.getChatId(), true);
 				}
 			}
 			

@@ -3,7 +3,7 @@ package com.pojul.fastIM.dao;
 import java.util.List;
 
 import com.pojul.fastIM.entity.ChatRoom;
-import com.pojul.fastIM.utils.Constant;
+import com.pojul.fastIM.utils.ServerConstant;
 import com.pojul.fastIM.utils.DaoUtil;
 import com.pojul.fastIM.utils.DateUtil;
 import com.pojul.objectsocket.utils.LogUtil;
@@ -29,7 +29,7 @@ public class ChatRoomDao {
 	}
 	
 	public void CreateSingleChatRoom(String chatRoomUid, String chatRoomName) {
-		int chatRoomType = Constant.CHAT_TYPE_SINGLE;
+		int chatRoomType = ServerConstant.CHAT_TYPE_SINGLE;
 		String createDate = DateUtil.getFormatDate();
 		String sql = "insert into chat_room(chat_room_uid, chat_room_name, chat_room_type, create_date) values ("
 				+ "'" + chatRoomUid + "', " 

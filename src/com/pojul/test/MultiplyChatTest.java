@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import com.pojul.fastIM.message.chat.TextChatMessage;
+import com.pojul.fastIM.message.chat.TextPicMessage;
 import com.pojul.fastIM.message.login.LoginMessage;
 import com.pojul.fastIM.message.response.LoginResponse;
 import com.pojul.fastIM.utils.DateUtil;
@@ -13,6 +14,7 @@ import com.pojul.objectsocket.message.MessageHeader;
 import com.pojul.objectsocket.message.StringFile;
 import com.pojul.objectsocket.socket.ClientSocket;
 import com.pojul.objectsocket.socket.SocketReceiver;
+import com.pojul.objectsocket.utils.Constant;
 import com.pojul.objectsocket.utils.LogUtil;
 
 public class MultiplyChatTest {
@@ -34,6 +36,7 @@ public class MultiplyChatTest {
 	
 	public static void main(String[] args) {
 		
+		Constant.STORAGE_TYPE = 0;
 		try {
 			mClientSocket = new ClientSocket("127.0.0.1", 57142);
 		} catch (IOException e1) {
@@ -41,6 +44,7 @@ public class MultiplyChatTest {
 			e1.printStackTrace();
 		}
 		mClientSocket.setRecListener(new RecListener());
+		
 		
 		login(6);
 		
@@ -96,6 +100,27 @@ public class MultiplyChatTest {
 		mClientSocket.sendData(mTextMessage);
 	}
 	
+	static void sendTextPicMessage() {
+		if("韩信".equals(from)) {
+			try {
+				Thread.sleep(28000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			TextPicMessage mTextPicMessage = new TextPicMessage();
+			mTextPicMessage.setFrom(from);
+			mTextPicMessage.setTo("战国群聊");
+			mTextPicMessage.setText("hello");
+			StringFile mStringFile = new StringFile(Constant.STORAGE_TYPE);
+			mStringFile.setFilePath("D:\\testpic\\3.jpg");
+			mStringFile.setFileName("3.jpg");
+			mTextPicMessage.setPic(mStringFile);
+			mTextPicMessage.setChatType(2);
+			mClientSocket.sendData(mTextPicMessage);
+		}
+	}
+	
 	static class RecListener implements SocketReceiver.ISocketReceiver{
 
 		@Override
@@ -115,16 +140,20 @@ public class MultiplyChatTest {
 			// TODO Auto-generated method stub
 			if(message instanceof LoginResponse) {
 				LoginResponse mLoginResponse = (LoginResponse)message;
+				LogUtil.i(getClass().getName(), message.toString());
 				if(200 == mLoginResponse.getCode()) {
 					mClientSocket.setChatId(mLoginResponse.getChatId()); 
 					input();
+					sendTextPicMessage();
 				}
-				LogUtil.i(getClass().getName(), message.toString());
 			}else if(message instanceof TextChatMessage) {
 				TextChatMessage mTextMessage = (TextChatMessage)message;
 				System.out.println("         " + message.getFrom() + ": " + mTextMessage.getText());
-			}else {
-				
+			}else if(message instanceof TextPicMessage) {
+				TextPicMessage mTextPicMessage = (TextPicMessage)message;
+				System.out.println("         " + mTextPicMessage.getFrom() + ": "
+						+ mTextPicMessage.getText() + "\n"
+						+ "              " + mTextPicMessage.getPic().getFilePath());
 			}
 		}
 
