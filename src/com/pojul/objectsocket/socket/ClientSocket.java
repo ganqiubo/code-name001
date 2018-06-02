@@ -3,8 +3,6 @@ package com.pojul.objectsocket.socket;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
-import com.pojul.fastIM.dao.UserDao;
 import com.pojul.objectsocket.message.BaseMessage;
 
 public class ClientSocket {
@@ -14,10 +12,15 @@ public class ClientSocket {
 	protected SocketReceiver.ISocketReceiver recListener;
 	protected SocketSender mSocketSender;
 	protected SocketSender.ISocketSender senderListener;
+	protected  OnStatusChangedListener mOnStatusChangedListener;
 	//chatId为用户名
 	protected String chatId;
 	protected String deviceType;
-	
+
+	public void setmOnStatusChangedListener(OnStatusChangedListener mOnStatusChangedListener) {
+		this.mOnStatusChangedListener = mOnStatusChangedListener;
+	}
+
 	public String getDeviceType() {
 		return deviceType;
 	}
@@ -79,7 +82,9 @@ public class ClientSocket {
 	
 	public void closeConn() {
 		if(mSocket != null) {
-			new UserDao().loginOut(chatId, deviceType);
+			if(mOnStatusChangedListener != null) {
+				mOnStatusChangedListener.onConnClosed();
+			}
 			try {
 				stopRec();
 				stopSend();
@@ -112,6 +117,10 @@ public class ClientSocket {
 
 	public void setChatId(String chatId) {
 		this.chatId = chatId;
+	}
+	
+	public interface OnStatusChangedListener{
+		public void onConnClosed();
 	}
 	
 }

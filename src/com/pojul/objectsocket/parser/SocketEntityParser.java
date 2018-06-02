@@ -87,7 +87,7 @@ public class SocketEntityParser {
 			Pattern pattern = Pattern.compile(StringFile.regexStr);
 			Matcher matcher = pattern.matcher(entityJson);
 			if (matcher.find()) {
-				System.out.println("getFilesPath: find");
+				//System.out.println("getFilesPath: find");
 				files.add(entityJson.substring((matcher.start() + StringFile.pathBorderStart.length()), 
 						(matcher.end() - StringFile.pathBorderEnd.length()) ));
 				LogUtil.d(TAG, "find file local path = " + files.get( (files.size() - 1) ));

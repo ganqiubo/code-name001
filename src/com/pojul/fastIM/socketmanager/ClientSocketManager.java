@@ -27,6 +27,7 @@ import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.message.MessageHeader;
 import com.pojul.objectsocket.message.StringFile;
 import com.pojul.objectsocket.socket.ClientSocket;
+import com.pojul.objectsocket.socket.ClientSocket.OnStatusChangedListener;
 import com.pojul.objectsocket.socket.SocketReceiver;
 import com.pojul.objectsocket.socket.SocketSender;
 import com.pojul.objectsocket.utils.LogUtil;
@@ -81,6 +82,7 @@ public class ClientSocketManager {
 		ClientSocket mClientSocket = new ClientSocket(mSocket);
 		onMessageRecListener(mClientSocket);
 		onMessageSendListener(mClientSocket);
+		onStatusChangedListener(mClientSocket);
 	}
 
 	protected void LoginoutMessage(ClientSocket mClientSocket, LoginoutMessage message) {
@@ -113,7 +115,7 @@ public class ClientSocketManager {
 
 	}
 
-	private void sendUnSendMessage(ClientSocket mClientSocket) {
+	protected void sendUnSendMessage(ClientSocket mClientSocket) {
 		// TODO Auto-generated method stub
 		//List<Message>
 		List<UserMessage> userMessages = new UserMessageDao().getUnSendMessage(mClientSocket.getChatId());
@@ -136,7 +138,7 @@ public class ClientSocketManager {
 	}
 	
 
-	private void onMessageRecListener(ClientSocket mClientSocket) {
+	protected void onMessageRecListener(ClientSocket mClientSocket) {
 		// TODO Auto-generated method stub
 		mClientSocket.setRecListener(new SocketReceiver.ISocketReceiver() {
 
@@ -190,7 +192,7 @@ public class ClientSocketManager {
 		});
 	}
 
-	private void onMessageSendListener(ClientSocket mClientSocket) {
+	protected void onMessageSendListener(ClientSocket mClientSocket) {
 		// TODO Auto-generated method stub
 		mClientSocket.setSenderListener(new SocketSender.ISocketSender() {
 			
@@ -221,5 +223,17 @@ public class ClientSocketManager {
 			}
 		});
 	}
+	
+	protected void onStatusChangedListener(ClientSocket mClientSocket) {
+		mClientSocket.setmOnStatusChangedListener(new ClientSocket.OnStatusChangedListener() {
+			
+			@Override
+			public void onConnClosed() {
+				// TODO Auto-generated method stub
+				new UserDao().loginOut(mClientSocket.getChatId(), mClientSocket.getDeviceType());
+			}
+		});
+	}
+	
 	
 }

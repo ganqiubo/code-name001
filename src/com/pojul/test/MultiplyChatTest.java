@@ -46,7 +46,7 @@ public class MultiplyChatTest {
 		mClientSocket.setRecListener(new RecListener());
 		
 		
-		login(6);
+		login(1);
 		
 	}
 	
@@ -113,8 +113,8 @@ public class MultiplyChatTest {
 			mTextPicMessage.setTo("战国群聊");
 			mTextPicMessage.setText("hello");
 			StringFile mStringFile = new StringFile(Constant.STORAGE_TYPE);
-			mStringFile.setFilePath("D:\\testpic\\3.jpg");
-			mStringFile.setFileName("3.jpg");
+			mStringFile.setFilePath("E:\\testFie\\u=3551931567,2984114125&fm=27&gp=0.jpg");
+			mStringFile.setFileName("u=3551931567,2984114125&fm=27&gp=0.jpg");
 			mTextPicMessage.setPic(mStringFile);
 			mTextPicMessage.setChatType(2);
 			mClientSocket.sendData(mTextPicMessage);
@@ -170,6 +170,17 @@ public class MultiplyChatTest {
 		}
 		
 	}
+	
+	static class StatusListener implements ClientSocket.OnStatusChangedListener{
+
+		@Override
+		public void onConnClosed() {
+			// TODO Auto-generated method stub
+			run = false;
+		}
+		
+	}
+	
 	
 	
 }
