@@ -1,27 +1,29 @@
 package com.pojul.test;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 import com.pojul.fastIM.message.chat.TextChatMessage;
 import com.pojul.fastIM.message.chat.TextPicMessage;
 import com.pojul.fastIM.message.request.LoginMessage;
 import com.pojul.fastIM.message.response.LoginResponse;
-import com.pojul.fastIM.utils.DateUtil;
 import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.message.MessageHeader;
+import com.pojul.objectsocket.message.ResponseMessage;
 import com.pojul.objectsocket.message.StringFile;
 import com.pojul.objectsocket.socket.ClientSocket;
+import com.pojul.objectsocket.socket.RequestTimeOut;
 import com.pojul.objectsocket.socket.SocketReceiver;
+import com.pojul.objectsocket.socket.SocketRequest;
 import com.pojul.objectsocket.utils.Constant;
 import com.pojul.objectsocket.utils.LogUtil;
 
-public class MultiplyChatTest {
+public class TestLoginRequest {
 
 	public static ClientSocket mClientSocket;
 	public static boolean run =true;
 	static String from = "";
+	static Scanner input = new Scanner(System.in);
 	public static List<String[]> listMaps = new ArrayList<String[]>(){{
 		add(new String[] {"Lucy","123123"});
 		add(new String[] {"Tony","123456"});
@@ -35,35 +37,68 @@ public class MultiplyChatTest {
 	}};
 	
 	public static void main(String[] args) {
-		
+
 		Constant.STORAGE_TYPE = 0;
-		try {
-			mClientSocket = new ClientSocket("127.0.0.1", 57142);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		mClientSocket.setRecListener(new RecListener());
+		LogUtil.allowD = false;
 		
-		login(0);
-		
+		conn();
+
 	}
 	
-	static void login(int which) {
-		/*String[] info = new String[2];//listMaps.get(which);
-		Scanner input = new Scanner(System.in);
-		System.out.println("请输入用户名：");
-		info[0] = input.nextLine();
-		System.out.println("请输入密码：");
-		info[1] = input.nextLine();*/
+	static void conn(){
+		System.out.println("conn...");
+		SocketRequest.getInstance().resuestConn(new SocketRequest.IRequestConn() {
+            @Override
+            public void onError(String msg) {
+            	System.out.println("conn fail");
+            }
+
+            @Override
+            public void onFinished(ClientSocket clientSocket) {
+                if(clientSocket == null || clientSocket.getmSocket() == null){
+                	System.out.println("conn fail");
+                    return;
+                }
+                mClientSocket = clientSocket;
+                mClientSocket.setRecListener(new RecListener());
+                mClientSocket.setmOnStatusChangedListener(new StatusListener());
+                
+                System.out.println("conn success");
+                login(7);
+            }
+        }, "127.0.0.1", 57142);
+	}
+	
+	static void login(int which){
+		System.out.println("login...");
 		String[] info = listMaps.get(which);
 		from = info[0];
-		LoginMessage mLoginMessage = new LoginMessage();
-		mLoginMessage.setUserName(info[0]);
-		mLoginMessage.setPassWd(info[1]);
-		mLoginMessage.setDeviceType("windows");
-		mClientSocket.sendData(mLoginMessage);
-	}
+        LoginMessage mLoginMessage = new LoginMessage();
+        mLoginMessage.setUserName(info[0]);
+        mLoginMessage.setPassWd(info[1]);
+        mLoginMessage.setDeviceType("windows");
+        SocketRequest.getInstance().resuest(mClientSocket, mLoginMessage, new SocketRequest.IRequest(){
+
+			@Override
+			public void onError(String msg) {
+				// TODO Auto-generated method stub
+				System.out.println("login fail: " + msg);
+			}
+
+			@Override
+			public void onFinished(ResponseMessage mResponse) {
+				// TODO Auto-generated method stub
+				LoginResponse loginResponse = (LoginResponse)mResponse;
+				if(loginResponse.getCode() == 200) {
+					System.out.println(mResponse.getMessage() + ": " + mResponse.toString());
+					input();
+				}else {
+					System.out.println(mResponse.getMessage() + ": " + mResponse.toString());
+				}
+			}
+           
+        });
+    }
 	
 	static void input() {
 		// TODO Auto-generated method stub
@@ -72,7 +107,6 @@ public class MultiplyChatTest {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				Scanner input = new Scanner(System.in);
 				String inputStr = "";
 				while(run) {
 					inputStr = input.nextLine();
@@ -98,27 +132,6 @@ public class MultiplyChatTest {
 		mClientSocket.sendData(mTextMessage);
 	}
 	
-	static void sendTextPicMessage() {
-		if("韩信".equals(from)) {
-			try {
-				Thread.sleep(28000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			TextPicMessage mTextPicMessage = new TextPicMessage();
-			mTextPicMessage.setFrom(from);
-			mTextPicMessage.setTo("战国群聊");
-			mTextPicMessage.setText("hello");
-			StringFile mStringFile = new StringFile(Constant.STORAGE_TYPE);
-			mStringFile.setFilePath("E:\\testFie\\u=35519315672984114125&fm=27&gp=0.jpg");
-			mStringFile.setFileName("u=3551931567,2984114125&fm=27&gp=0.jpg");
-			mTextPicMessage.setPic(mStringFile);
-			mTextPicMessage.setChatType(2);
-			mClientSocket.sendData(mTextPicMessage);
-		}
-	}
-	
 	static class RecListener implements SocketReceiver.ISocketReceiver{
 
 		@Override
@@ -136,15 +149,7 @@ public class MultiplyChatTest {
 		@Override
 		public void onReadEntity(BaseMessage message) {
 			// TODO Auto-generated method stub
-			if(message instanceof LoginResponse) {
-				LoginResponse mLoginResponse = (LoginResponse)message;
-				LogUtil.i(getClass().getName(), message.toString());
-				if(200 == mLoginResponse.getCode()) {
-					mClientSocket.setChatId(mLoginResponse.getChatId()); 
-					input();
-					sendTextPicMessage();
-				}
-			}else if(message instanceof TextChatMessage) {
+			if(message instanceof TextChatMessage) {
 				TextChatMessage mTextMessage = (TextChatMessage)message;
 				System.out.println("         " + message.getFrom() + ": " + mTextMessage.getText());
 			}else if(message instanceof TextPicMessage) {
@@ -174,11 +179,15 @@ public class MultiplyChatTest {
 		@Override
 		public void onConnClosed() {
 			// TODO Auto-generated method stub
-			run = false;
+			exit();
 		}
-		
 	}
 	
-	
+	static void exit() {
+		// TODO Auto-generated method stub
+		RequestTimeOut.getInstance().stopMonitor();
+		RequestTimeOut.getInstance().clearRequestQuenesNotify();
+		run = false;
+	}
 	
 }

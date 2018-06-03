@@ -5,34 +5,24 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import javax.websocket.OnClose;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.pojul.fastIM.dao.MessageDao;
 import com.pojul.fastIM.dao.UserDao;
 import com.pojul.fastIM.dao.UserMessageDao;
-import com.pojul.fastIM.entity.Message;
 import com.pojul.fastIM.entity.UserMessage;
 import com.pojul.fastIM.message.chat.ChatMessage;
-import com.pojul.fastIM.message.chat.TextPicMessage;
-import com.pojul.fastIM.message.login.LoginMessage;
-import com.pojul.fastIM.message.login.LoginoutMessage;
+import com.pojul.fastIM.message.request.LoginMessage;
+import com.pojul.fastIM.message.request.LoginoutMessage;
 import com.pojul.fastIM.message.response.LoginResponse;
-import com.pojul.fastIM.message.response.Response;
 import com.pojul.fastIM.transmitor.UserTransmitor;
-import com.pojul.fastIM.utils.Util;
 import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.message.MessageHeader;
+import com.pojul.objectsocket.message.RequestMessage;
 import com.pojul.objectsocket.message.StringFile;
 import com.pojul.objectsocket.socket.ClientSocket;
-import com.pojul.objectsocket.socket.ClientSocket.OnStatusChangedListener;
 import com.pojul.objectsocket.socket.SocketReceiver;
 import com.pojul.objectsocket.socket.SocketSender;
 import com.pojul.objectsocket.utils.LogUtil;
-import com.sun.org.apache.bcel.internal.generic.I2F;
-import sun.rmi.runtime.Log;
 
 public class ClientSocketManager {
 
@@ -95,7 +85,7 @@ public class ClientSocketManager {
 		// TODO Auto-generated method stub
 		int code = 100;
 		if (supportPlatform.indexOf(message.getDeviceType()) == -1) {
-			mClientSocket.sendDataAndClose(new LoginResponse(code, "不支持的设备类型", ""));
+			mClientSocket.sendDataAndClose(new LoginResponse(code, "不支持的设备类型", "", message.getMessageUid()));
 			return;
 		}
 		String loginInfo = new UserDao().loginByUserName(message);
@@ -105,12 +95,12 @@ public class ClientSocketManager {
 			addClientSocket(mClientSocket);
 			LogUtil.i(TAG, "login success");
 			code = 200;
-			mClientSocket.sendData(new LoginResponse(code, loginInfo, message.getUserName()));
+			mClientSocket.sendData(new LoginResponse(code, loginInfo, message.getUserName(), message.getMessageUid()));
 			
 			sendUnSendMessage(mClientSocket);
 			
 		} else {
-			mClientSocket.sendDataAndClose(new LoginResponse(code, loginInfo, ""));
+			mClientSocket.sendDataAndClose(new LoginResponse(code, loginInfo, "", message.getMessageUid()));
 		}
 
 	}
@@ -171,17 +161,11 @@ public class ClientSocketManager {
 					return;
 				}
 				isFirstRead = false;
-				if (message instanceof LoginMessage) {
-					Login(mClientSocket, (LoginMessage) message);
-				} else if (message instanceof LoginoutMessage) {
-					LoginoutMessage(mClientSocket, (LoginoutMessage) message);
-				} else {
-					if (message instanceof ChatMessage) {
-						mTransmitor.transmitMessage((ChatMessage) message);
-					}
-
+				if(message instanceof RequestMessage) {
+					dealRequest(mClientSocket, message);
+				}else {
+					dealNormalMessage(mClientSocket, message, mTransmitor);
 				}
-
 			}
 
 			@Override
@@ -192,6 +176,22 @@ public class ClientSocketManager {
 		});
 	}
 
+	protected void dealNormalMessage(ClientSocket mClientSocket, BaseMessage message, UserTransmitor mTransmitor) {
+		// TODO Auto-generated method stub
+		if (message instanceof ChatMessage) {
+			mTransmitor.transmitMessage((ChatMessage) message);
+		}
+	}
+
+	protected void dealRequest(ClientSocket mClientSocket, BaseMessage message) {
+		// TODO Auto-generated method stub
+		if (message instanceof LoginMessage) {
+			Login(mClientSocket, (LoginMessage) message);
+		} else if (message instanceof LoginoutMessage) {
+			LoginoutMessage(mClientSocket, (LoginoutMessage) message);
+		}
+	}
+
 	protected void onMessageSendListener(ClientSocket mClientSocket) {
 		// TODO Auto-generated method stub
 		mClientSocket.setSenderListener(new SocketSender.ISocketSender() {
@@ -200,7 +200,7 @@ public class ClientSocketManager {
 			public void onSendFinish(BaseMessage mBaseMessage) {
 				// TODO Auto-generated method stub
 				if(mBaseMessage instanceof ChatMessage) {
-					new UserMessageDao().updateSendStatus( ((ChatMessage)mBaseMessage).getChatUid(), mClientSocket.getChatId(), true);
+					new UserMessageDao().updateSendStatus( ((ChatMessage)mBaseMessage).getMessageUid(), mClientSocket.getChatId(), true);
 				}
 			}
 			

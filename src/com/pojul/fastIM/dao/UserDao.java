@@ -3,7 +3,7 @@ import java.util.List;
 
 import com.pojul.fastIM.entity.LoginStatus;
 import com.pojul.fastIM.entity.User;
-import com.pojul.fastIM.message.login.LoginMessage;
+import com.pojul.fastIM.message.request.LoginMessage;
 import com.pojul.fastIM.utils.DaoUtil;
 
 public class UserDao {

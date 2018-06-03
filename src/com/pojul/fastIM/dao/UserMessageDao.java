@@ -12,7 +12,7 @@ public class UserMessageDao {
 		int send = isSend ? 1:0;
 		String sql = "insert into user_message(user_message_uid, to_user, from_user, chat_room_uid, "
 				+ "is_send, send_time) values (" +
-				"'" + message.getChatUid() + "', " + 
+				"'" + message.getMessageUid() + "', " + 
 				"'" + toUser + "', " + 
 				"'" + message.getFrom() + "', " + 
 				"'" + chatRoomUid + "', " + 

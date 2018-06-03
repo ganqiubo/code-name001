@@ -17,12 +17,6 @@ public class ServerSocketManager {
 		if(mServerSocketManager == null) {
 			synchronized (ServerSocketManager.class) {
 				if(mServerSocketManager == null) {
-					/*try {
-						System.setOut(new PrintStream(new FileOutputStream("D:\\eclipse_console\\logs\\log.txt")));
-					} catch (FileNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}*/
 					mServerSocketManager = new ServerSocketManager();
 				}
 			}

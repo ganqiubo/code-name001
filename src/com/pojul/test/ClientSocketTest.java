@@ -10,8 +10,8 @@ import java.util.Map.Entry;
 
 import com.pojul.fastIM.entity.LoginStatus;
 import com.pojul.fastIM.message.chat.TextChatMessage;
-import com.pojul.fastIM.message.login.LoginMessage;
-import com.pojul.fastIM.message.login.LoginoutMessage;
+import com.pojul.fastIM.message.request.LoginMessage;
+import com.pojul.fastIM.message.request.LoginoutMessage;
 import com.pojul.fastIM.message.response.LoginResponse;
 import com.pojul.fastIM.utils.ServerConstant;
 import com.pojul.objectsocket.message.BaseMessage;
