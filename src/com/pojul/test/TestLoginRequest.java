@@ -64,7 +64,7 @@ public class TestLoginRequest {
                 mClientSocket.setmOnStatusChangedListener(new StatusListener());
                 
                 System.out.println("conn success");
-                login(7);
+                login(3);
             }
         }, "127.0.0.1", 57142);
 	}

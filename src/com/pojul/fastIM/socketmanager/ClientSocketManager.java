@@ -63,7 +63,16 @@ public class ClientSocketManager {
 
 	public void RemoveClientSocket(ClientSocket mClientSocket) {
 		synchronized (clientSockets) {
-			clientSockets.remove(mClientSocket.getChatId());
+			if(clientSockets.containsKey(mClientSocket.getChatId())) {
+				HashMap<String, ClientSocket> devicesSockets = clientSockets.get(mClientSocket.getChatId());
+				if(devicesSockets.containsKey(mClientSocket.getDeviceType())) {
+					if(devicesSockets.size() <= 1) {
+						clientSockets.remove(mClientSocket.getChatId());
+					}else {
+						devicesSockets.remove(mClientSocket.getDeviceType());
+					}
+				}
+			}
 			LogUtil.i(TAG, "RemoveClientSocket current clientSockets size: " + clientSockets.size());
 		}
 	}
@@ -231,6 +240,7 @@ public class ClientSocketManager {
 			public void onConnClosed() {
 				// TODO Auto-generated method stub
 				new UserDao().loginOut(mClientSocket.getChatId(), mClientSocket.getDeviceType());
+				RemoveClientSocket(mClientSocket);
 			}
 		});
 	}
