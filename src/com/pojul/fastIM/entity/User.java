@@ -2,6 +2,8 @@ package com.pojul.fastIM.entity;
 
 import java.sql.ResultSet;
 
+import com.pojul.objectsocket.message.StringFile;
+
 public class User extends BaseEntity{
 
 	private int id;
@@ -9,19 +11,26 @@ public class User extends BaseEntity{
 	private String passwd;
 	private String nickName;
 	private String registDate;
+	private String photo;
+	private String autograph;
 	
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public User(int id, String userName, String passwd, String nickName, String registDate) {
+	
+	public User(int id, String userName, String passwd, String nickName, String registDate, String photo,
+			String autograph) {
 		super();
 		this.id = id;
 		this.userName = userName;
 		this.passwd = passwd;
 		this.nickName = nickName;
 		this.registDate = registDate;
+		this.photo = photo;
+		this.autograph = autograph;
 	}
+
 	public int getId() {
 		return id;
 	}
@@ -53,10 +62,28 @@ public class User extends BaseEntity{
 		this.registDate = registDate;
 	}
 	
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	public String getAutograph() {
+		return autograph;
+	}
+
+	public void setAutograph(String autograph) {
+		this.autograph = autograph;
+	}
+
+	
+
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", userName=" + userName + ", passwd=" + passwd + ", nickName=" + nickName
-				+ ", registDate=" + registDate + "]";
+				+ ", registDate=" + registDate + ", photo=" + photo + ", autograph=" + autograph + "]";
 	}
 
 	@Override
@@ -71,6 +98,10 @@ public class User extends BaseEntity{
 		passwd = getString(rs, "passwd");
 		nickName = getString(rs, "nick_name");
 		registDate = getString(rs, "regist_date");
+		photo = getString(rs, "autograph");
+		autograph = getString(rs, "autograph");
 	}
+
+	
 	
 }
