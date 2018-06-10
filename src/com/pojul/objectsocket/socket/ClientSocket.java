@@ -89,7 +89,7 @@ public class ClientSocket {
 				mSocket.shutdownInput();
 				mSocket.shutdownOutput();
 				mSocket.close();
-			} catch (IOException e) {
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				if(recListener != null) {
 					recListener.onError(e);

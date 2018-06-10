@@ -68,4 +68,13 @@ public class UserDao {
 		return DaoUtil.executeUpdate(sql);
 	}
 	
+	public User getUserInfo(String userName) {
+		String sql = "select * from users where user_name = '" + userName  + "'";
+		List<User> users = DaoUtil.executeQuery(sql, User.class);
+		if(users == null || users.size() <= 0) {
+			return null;
+		}
+		return users.get(0);
+	}
+	
 }

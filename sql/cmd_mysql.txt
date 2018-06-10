@@ -27,3 +27,26 @@ select * from information_schema.columns where table_schema = "fastim" and table
 
 #查询列名和注释
 select column_name, column_comment from information_schema.columns where table_schema ='fastim' and table_name = 'users';
+
+#修改表结构
+alter table 表名 modify column 字段名 类型;
+
+#字符串拼接
+select concat('11','22','33');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

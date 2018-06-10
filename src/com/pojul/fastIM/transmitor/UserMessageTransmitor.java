@@ -1,7 +1,6 @@
 package com.pojul.fastIM.transmitor;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -11,17 +10,13 @@ import com.pojul.fastIM.dao.MessageDao;
 import com.pojul.fastIM.dao.UserMessageDao;
 import com.pojul.fastIM.entity.ChatRoomMembers;
 import com.pojul.fastIM.entity.User;
-import com.pojul.fastIM.entity.UserMessage;
 import com.pojul.fastIM.message.chat.ChatMessage;
 import com.pojul.fastIM.socketmanager.ClientSocketManager;
 import com.pojul.fastIM.utils.ServerConstant;
-import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.socket.ClientSocket;
 import com.pojul.objectsocket.utils.LogUtil;
 
-import sun.text.resources.cldr.om.FormatData_om;
-
-public class UserTransmitor {
+public class UserMessageTransmitor {
 
 	private final static String TAG = "UserTransmitor";
 			
@@ -96,7 +91,7 @@ public class UserTransmitor {
 		if(to.equals(message.getFrom())) {
 			return;
 		}
-		LinkedHashMap<String, HashMap<String, ClientSocket>> tempclientSockets = ClientSocketManager.clientSockets;
+		//LinkedHashMap<String, HashMap<String, ClientSocket>> tempclientSockets = ClientSocketManager.clientSockets;
 		HashMap<String, ClientSocket> mClientSockets = ClientSocketManager.clientSockets.get(to);
 		if(mClientSockets != null && mClientSockets.size() > 0) {
 			for ( Entry<String, ClientSocket> entity : mClientSockets.entrySet()) {

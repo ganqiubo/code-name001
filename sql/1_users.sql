@@ -4,8 +4,8 @@ create table users(
 	passwd char(60) not null COMMENT '密码',
 	nick_name char(20) COMMENT '昵称',
 	regist_date char(20) not null COMMENT '注册日期',
-	photo varchar(40) COMMENT '头像',
-	autograph varchar(40) COMMENT '签名'
+	photo varchar(80) COMMENT '头像',
+	autograph varchar(60) COMMENT '签名'
 );
 
 #insert into users (user_name,passwd,regist_date) values("Lucy","123123","2018-06-20");

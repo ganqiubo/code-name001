@@ -9,12 +9,16 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.pojul.fastIM.dao.UserDao;
 import com.pojul.fastIM.dao.UserMessageDao;
+import com.pojul.fastIM.entity.User;
 import com.pojul.fastIM.entity.UserMessage;
 import com.pojul.fastIM.message.chat.ChatMessage;
+import com.pojul.fastIM.message.request.GetFriendsRequest;
 import com.pojul.fastIM.message.request.LoginMessage;
 import com.pojul.fastIM.message.request.LoginoutMessage;
 import com.pojul.fastIM.message.response.LoginResponse;
-import com.pojul.fastIM.transmitor.UserTransmitor;
+import com.pojul.fastIM.requestprocessor.GetFriendsProcessor;
+import com.pojul.fastIM.transmitor.RequestTransmitor;
+import com.pojul.fastIM.transmitor.UserMessageTransmitor;
 import com.pojul.objectsocket.message.BaseMessage;
 import com.pojul.objectsocket.message.MessageHeader;
 import com.pojul.objectsocket.message.RequestMessage;
@@ -94,7 +98,7 @@ public class ClientSocketManager {
 		// TODO Auto-generated method stub
 		int code = 100;
 		if (supportPlatform.indexOf(message.getDeviceType()) == -1) {
-			mClientSocket.sendDataAndClose(new LoginResponse(code, "不支持的设备类型", "", message.getMessageUid()));
+			mClientSocket.sendDataAndClose(new LoginResponse(code, "不支持的设备类型", "", message.getMessageUid(), null));
 			return;
 		}
 		String loginInfo = new UserDao().loginByUserName(message);
@@ -104,12 +108,11 @@ public class ClientSocketManager {
 			addClientSocket(mClientSocket);
 			LogUtil.i(TAG, "login success");
 			code = 200;
-			mClientSocket.sendData(new LoginResponse(code, loginInfo, message.getUserName(), message.getMessageUid()));
-			
+			User user = new UserDao().getUserInfo(message.getUserName());
+			mClientSocket.sendData(new LoginResponse(code, loginInfo, message.getUserName(), message.getMessageUid(), user));
 			sendUnSendMessage(mClientSocket);
-			
 		} else {
-			mClientSocket.sendDataAndClose(new LoginResponse(code, loginInfo, "", message.getMessageUid()));
+			mClientSocket.sendDataAndClose(new LoginResponse(code, loginInfo, "", message.getMessageUid(), null));
 		}
 
 	}
@@ -142,7 +145,7 @@ public class ClientSocketManager {
 		mClientSocket.setRecListener(new SocketReceiver.ISocketReceiver() {
 
 			boolean isFirstRead = true;
-			UserTransmitor mTransmitor = new UserTransmitor();
+			UserMessageTransmitor mTransmitor = new UserMessageTransmitor();
 
 			@Override
 			public void onReadHead(MessageHeader header) {
@@ -185,7 +188,7 @@ public class ClientSocketManager {
 		});
 	}
 
-	protected void dealNormalMessage(ClientSocket mClientSocket, BaseMessage message, UserTransmitor mTransmitor) {
+	protected void dealNormalMessage(ClientSocket mClientSocket, BaseMessage message, UserMessageTransmitor mTransmitor) {
 		// TODO Auto-generated method stub
 		if (message instanceof ChatMessage) {
 			mTransmitor.transmitMessage((ChatMessage) message);
@@ -198,6 +201,8 @@ public class ClientSocketManager {
 			Login(mClientSocket, (LoginMessage) message);
 		} else if (message instanceof LoginoutMessage) {
 			LoginoutMessage(mClientSocket, (LoginoutMessage) message);
+		}else {
+			RequestTransmitor.getInstance().transmit((RequestMessage)message, mClientSocket);
 		}
 	}
 

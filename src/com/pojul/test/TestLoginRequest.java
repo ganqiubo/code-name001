@@ -64,7 +64,7 @@ public class TestLoginRequest {
                 mClientSocket.setmOnStatusChangedListener(new StatusListener());
                 
                 System.out.println("conn success");
-                login(3);
+                login(1);
             }
         }, "127.0.0.1", 57142);
 	}
@@ -115,8 +115,8 @@ public class TestLoginRequest {
 						return;
 					}
 					SendMessage(messageTo[0], messageTo[1], Integer.parseInt(messageTo[2]));
-					/*System.out.println("                                    "
-							+ " me: " + inputStr);*/
+					System.out.println("                                    "
+							+ " me: " + inputStr);
 				}
 			}
 		}).start();
@@ -188,6 +188,8 @@ public class TestLoginRequest {
 		RequestTimeOut.getInstance().stopMonitor();
 		RequestTimeOut.getInstance().clearRequestQuenesNotify();
 		run = false;
+		input.close();
+		input = null;
 	}
 	
 }

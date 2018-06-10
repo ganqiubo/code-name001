@@ -6,20 +6,20 @@ import com.pojul.objectsocket.message.StringFile;
 
 public class User extends BaseEntity{
 
-	private int id;
-	private String userName;
-	private String passwd;
-	private String nickName;
-	private String registDate;
-	private String photo;
-	private String autograph;
+	protected int id;
+	protected String userName;
+	protected String passwd;
+	protected String nickName;
+	protected String registDate;
+	protected StringFile photo;
+	protected String autograph;
 	
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-	public User(int id, String userName, String passwd, String nickName, String registDate, String photo,
+	public User(int id, String userName, String passwd, String nickName, String registDate, StringFile photo,
 			String autograph) {
 		super();
 		this.id = id;
@@ -63,10 +63,10 @@ public class User extends BaseEntity{
 	}
 	
 	public String getPhoto() {
-		return photo;
+		return photo.getFilePath();
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(StringFile photo) {
 		this.photo = photo;
 	}
 
@@ -95,13 +95,11 @@ public class User extends BaseEntity{
 		}
 		id = getInt(rs, "id");
 		userName = getString(rs, "user_name");
-		passwd = getString(rs, "passwd");
 		nickName = getString(rs, "nick_name");
 		registDate = getString(rs, "regist_date");
-		photo = getString(rs, "autograph");
+		photo = getStringFile(rs, "photo");
 		autograph = getString(rs, "autograph");
 	}
 
-	
 	
 }
