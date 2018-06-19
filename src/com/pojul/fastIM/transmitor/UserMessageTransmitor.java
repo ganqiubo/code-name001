@@ -91,6 +91,11 @@ public class UserMessageTransmitor {
 		if(to.equals(message.getFrom())) {
 			return;
 		}
+		
+		//保存转发用户消息
+		//System.out.println("insertMesage: " + to);
+		new UserMessageDao().insertUserMessage(message, false, to, chatRoomUid);
+		
 		//LinkedHashMap<String, HashMap<String, ClientSocket>> tempclientSockets = ClientSocketManager.clientSockets;
 		HashMap<String, ClientSocket> mClientSockets = ClientSocketManager.clientSockets.get(to);
 		if(mClientSockets != null && mClientSockets.size() > 0) {
@@ -101,9 +106,6 @@ public class UserMessageTransmitor {
 				}
 			}
 		}
-		//保存转发用户消息
-		//System.out.println("insertMesage: " + to);
-		new UserMessageDao().insertUserMessage(message, false, to, chatRoomUid);
 	}
 
 	private String getChatRoomUid(ChatMessage message) {

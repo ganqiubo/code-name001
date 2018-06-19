@@ -16,3 +16,4 @@ create table chat_room_members(
 
 #select users.user_name as user_name from users INNER JOIN chat_room_members on (users.id = chat_room_members.user_id and chat_room_members.chat_room_id = 7);
 #select users.user_name as user_name from users right join chat_room_members on (users.id = chat_room_members.user_id and chat_room_members.chat_room_id = 7);
+

@@ -135,21 +135,19 @@ public class SocketSender{
 		
 	}
 	
-	protected BaseMessage getTopAndRemoveMessage(){
-		synchronized (mMessageQuene) {
-			BaseMessage mBaseMessage = null;
-			try {
-				mBaseMessage= mMessageQuene.getFirst();
-			} catch (Exception e) {
-				// TODO: handle exception
-				
-			}
-			if(mBaseMessage == null) {
-				return null;
-			}
-			mMessageQuene.removeFirst();
-			return mBaseMessage;
+	protected BaseMessage getTopAndRemoveMessage() {
+		BaseMessage mBaseMessage = null;
+		try {
+			mBaseMessage = mMessageQuene.getFirst();
+		} catch (Exception e) {
+			// TODO: handle exception
+
 		}
+		if (mBaseMessage == null) {
+			return null;
+		}
+		mMessageQuene.removeFirst();
+		return mBaseMessage;
 	}
 	
 	public void setSenderListener(ISocketSender mISocketSender) {
