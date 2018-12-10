@@ -12,7 +12,7 @@ public class JDBCConnect {
 	
 	public static Connection getConn() {
 	    String driver = "com.mysql.jdbc.Driver";
-	    String url = "jdbc:mysql://localhost:3306/fastim?characterEncoding=utf8&useSSL=true";
+	    String url = "jdbc:mysql://127.0.0.1:3306/fastim?useSSL=false";
 	    String username = "root";
 	    String password = "7yg257zh";
 	    //String password = "";
@@ -22,8 +22,10 @@ public class JDBCConnect {
 	        conn = (Connection) DriverManager.getConnection(url, username, password);
 	    } catch (ClassNotFoundException e) {
 	        LogUtil.i(TAG, e.toString());
+	    	//e.printStackTrace();
 	    } catch (SQLException e) {
 	    	LogUtil.i(TAG, e.toString());
+	    	//e.printStackTrace();
 	    }
 	    return conn;
 	}

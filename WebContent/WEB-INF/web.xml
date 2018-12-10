@@ -14,4 +14,12 @@
     <servlet-class>com.pojul.fastIM.servlet.Initservlet</servlet-class>
     <load-on-startup>0</load-on-startup>
   </servlet>
+  <servlet>
+    <servlet-name>PayMember</servlet-name>
+    <servlet-class>com.pojul.fastIM.servlet.PayMemberServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DownLoadApkServlet</servlet-name>
+    <servlet-class>com.pojul.fastIM.servlet.DownLoadApkServlet</servlet-class>
+  </servlet>
 </web-app>

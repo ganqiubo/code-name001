@@ -18,6 +18,7 @@ public class GetConversionInfoProcessor implements RequestProcessor{
 		List<Conversation> conversations = new ConversationDao()
 				.getConversationInfo(mRequest.getChatRoomType(), mRequest.getConversionFrom(), mRequest.getOwner());
 		GetConversionInfoResponse response = new GetConversionInfoResponse();
+		response.setMessageUid(request.getMessageUid());
 		if(conversations == null) {
 			response.setCode(100);
 			response.setMessage("系统错误");

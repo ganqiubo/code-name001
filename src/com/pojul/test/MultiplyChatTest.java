@@ -45,7 +45,7 @@ public class MultiplyChatTest {
 		}
 		mClientSocket.setRecListener(new RecListener());
 		
-		login(1);
+		login(0);
 		
 	}
 	

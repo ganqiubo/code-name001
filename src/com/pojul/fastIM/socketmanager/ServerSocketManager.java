@@ -3,6 +3,8 @@ package com.pojul.fastIM.socketmanager;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import com.mysql.jdbc.log.Log;
 import com.pojul.objectsocket.utils.LogUtil;
 
 public class ServerSocketManager {
@@ -27,9 +29,9 @@ public class ServerSocketManager {
 	
 	public void startServerSocket() {
 		if(mServerSocketc == null || !mServerSocketc.isBound() || mServerSocketc.isClosed()) {
-			while(!bindServerSocket()) {
-				bindServerSocket();
-			}
+			//while(!bindServerSocket()) {
+			bindServerSocket();
+			//}
 			startAccept();
 		}
 	}
@@ -38,10 +40,12 @@ public class ServerSocketManager {
 		try {
 			//int tempPort = Util.getRandomPort();
 			mServerSocketc = new ServerSocket(ServerSocketPort);
+			System.out.println("bindServerSocket success");
 			return true;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("bindServerSocket fail: " + e.getMessage());
 			return false;
 		}
 	}
@@ -54,6 +58,7 @@ public class ServerSocketManager {
 				try {
 					while(true) {
 						Socket newClientSocket = mServerSocketc.accept();
+						newClientSocket.setSoTimeout(0);
 						ClientSocketManager.getInstance().createClientSocket(newClientSocket);
 						LogUtil.i(TAG, "receive new socket from ip: " + 
 								newClientSocket.getInetAddress() + " ;port: " + 
@@ -61,7 +66,7 @@ public class ServerSocketManager {
 					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
 				}
 			}
 		});

@@ -1,6 +1,6 @@
 package com.pojul.objectsocket.message;
 
-import com.pojul.objectsocket.utils.StorageType;
+import com.pojul.objectsocket.constant.StorageType;
 
 public class StringFile {
 	
@@ -16,6 +16,7 @@ public class StringFile {
 	protected String fileName;
 	protected String filePath;
 	protected int storageType = 0;
+	protected long fileSize;
 	
 	public StringFile(int storageType) {
 		super();
@@ -34,6 +35,9 @@ public class StringFile {
 		this.fileName = fileName;
 	}
 	public String getFilePath() {
+		if(this.filePath == null){
+			return null;
+		}
 		if(storageType == StorageType.LOCAL) {
 			return filePath.replace(pathBorderStart, "").replace(pathBorderEnd, "");
 		}else {
@@ -55,16 +59,26 @@ public class StringFile {
 		return storageType;
 	}
 	
+	public long getFileSize() {
+		return fileSize;
+	}
+	
+	public void setFileSize(long fileSize) {
+		this.fileSize = fileSize;
+	}
+	
 	public void setStorageType(int storageType) {
 		this.storageType = storageType;
-		this.filePath = this.filePath.replace(pathBorderStart, "").replace(pathBorderEnd, "");
-		setFilePath(this.filePath);
+		if(this.filePath != null){
+			this.filePath = this.filePath.replace(pathBorderStart, "").replace(pathBorderEnd, "");
+			setFilePath(this.filePath);
+		}
 	}
 	
 	@Override
 	public String toString() {
 		return "StringFile [fileType=" + fileType + ", fileName=" + fileName + ", filePath=" + filePath
-				+ ", storageType=" + storageType + "]";
+				+ ", storageType=" + storageType + ", fileSize=" + fileSize + "]";
 	}
 	
 }

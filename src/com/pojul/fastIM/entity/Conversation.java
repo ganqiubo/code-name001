@@ -2,6 +2,8 @@ package com.pojul.fastIM.entity;
 
 import java.sql.ResultSet;
 
+import com.pojul.objectsocket.utils.Constant;
+
 //local table
 public class Conversation extends BaseEntity {
 
@@ -91,7 +93,7 @@ public class Conversation extends BaseEntity {
 		}
 		conversationName = getString(rs, "conversation_name");
 		/*conversationFrom = getString(rs, "conversation_from");*/
-		conversationPhoto = getString(rs, "conversation_photo");
+		conversationPhoto = Constant.BASE_URL + getString(rs, "conversation_photo");
 		/*conversationLastChat = getString(rs, "conversation_last_chat");
 		conversationLastChattime = getString(rs, "conversation_last_chattime");
 		conversationOwner = getString(rs, "conversation_owner");*/

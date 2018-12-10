@@ -1,5 +1,6 @@
 create table message(
-	message_uid varchar(40) primary key not null COMMENT 'uid',
+	id int not null primary key auto_increment COMMENT 'id',
+	message_uid varchar(40) unique not null COMMENT 'uid',
 	message_class varchar(200) not null COMMENT '消息类名称',
 	message_content varchar(2000) not null COMMENT '消息内容'
 );

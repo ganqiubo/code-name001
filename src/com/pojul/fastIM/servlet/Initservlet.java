@@ -5,6 +5,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
 import com.pojul.fastIM.socketmanager.ServerSocketManager;
+import com.pojul.objectsocket.utils.LogUtil;
 
 /**
  * Servlet implementation class Initservlet

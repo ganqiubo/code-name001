@@ -37,7 +37,7 @@ public class ChatRoomDao {
 				+ "'" + chatRoomType + "', "
 				+ "'" + createDate + "'" + 
 				")";
-		if(DaoUtil.executeUpdate(sql) < 0) {
+		if(DaoUtil.executeUpdate(sql, false) < 0) {
 			LogUtil.i(getClass().getName(), "创建聊天室失败");
 		}
 	}

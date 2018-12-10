@@ -2,6 +2,7 @@ package com.pojul.fastIM.dao;
 
 import java.util.List;
 
+import com.pojul.fastIM.entity.Message;
 import com.pojul.fastIM.entity.UserMessage;
 import com.pojul.fastIM.message.chat.ChatMessage;
 import com.pojul.fastIM.utils.DaoUtil;
@@ -19,14 +20,14 @@ public class UserMessageDao {
 				"'" + send + "', " + 
 				"'" + message.getSendTime() + "'" +
 				")";
-		DaoUtil.executeUpdate(sql);
+		DaoUtil.executeUpdate(sql, false);
 	}
 	
 	public void updateSendStatus(String messageUid, String to, boolean isSend) {
 		int send = isSend ? 1 : 0;
 		String sql = "update user_message set is_send = '" + send + "' where user_message_uid = '" + messageUid
 				+ "' and to_user = '" + to + "'";
-		DaoUtil.executeUpdate(sql);
+		DaoUtil.executeUpdate(sql, false);
 	}
 
 	public List<UserMessage> getUnSendMessage(String toUser) {
@@ -37,4 +38,12 @@ public class UserMessageDao {
 		return userMessages;
 	}
 	
+	public List<Message> getHistoryChat(String lastSendTime, String chatRoomUid, int num) {
+		String sql = "select a.message_class, a.message_content from message as a join "
+				+ "(select * from user_message where user_message.send_time < '"+ lastSendTime + "' "
+				+ "and chat_room_uid = '" + chatRoomUid + "' order by send_time desc limit " + num + ") b "
+				+ "on b.user_message_uid = a.message_uid;";
+		List<Message> messages = DaoUtil.executeQuery(sql, Message.class);
+		 return messages;
+	}
 }

@@ -6,11 +6,13 @@ import java.util.Map.Entry;
 
 import com.pojul.fastIM.dao.ChatRoomDao;
 import com.pojul.fastIM.dao.ChatRoomMembersDao;
+import com.pojul.fastIM.dao.CommunityMessEntityDao;
 import com.pojul.fastIM.dao.MessageDao;
 import com.pojul.fastIM.dao.UserMessageDao;
 import com.pojul.fastIM.entity.ChatRoomMembers;
 import com.pojul.fastIM.entity.User;
 import com.pojul.fastIM.message.chat.ChatMessage;
+import com.pojul.fastIM.message.other.TagMessClosed;
 import com.pojul.fastIM.socketmanager.ClientSocketManager;
 import com.pojul.fastIM.utils.ServerConstant;
 import com.pojul.objectsocket.socket.ClientSocket;
@@ -20,14 +22,16 @@ public class UserMessageTransmitor {
 
 	private final static String TAG = "UserTransmitor";
 			
-	public void transmitMessage(ChatMessage message) {
+	public void transmitMessage(ChatMessage message, ClientSocket clientSocket) {
 		synchronized (ClientSocketManager.clientSockets) {
 			if(message.getChatType() == ServerConstant.CHAT_TYPE_SINGLE) {
 				String chatRoomUid = createSingleChatRoom(message);
 				new MessageDao().insertMesage(message);
 				transmitSingle(message, message.getTo(), chatRoomUid);
-			} else {
+			} else if(message.getChatType() == ServerConstant.CHAT_TYPE_MULTIPLE){
 				transmitMultiply(message);
+			}else if(message.getChatType() == ServerConstant.CHAT_TYPE_PRIVATE_TAGMESS){
+				//transmitPrivateTagMess(message, clientSocket);
 			}
 			
 			//dnsURLContext
@@ -42,6 +46,25 @@ public class UserMessageTransmitor {
 				return;
 			}*/
 		}
+	}
+
+	private void transmitPrivateTagMess(ChatMessage message, ClientSocket clientSocket) {
+		// TODO Auto-generated method stub
+		if(message.getNote() == null) {
+			LogUtil.i("非法的私有标签回复消息");
+			return;
+		}
+		String tagMessUid = message.getNote().split(";")[0];
+		if(new CommunityMessEntityDao().checkTagEffictive(tagMessUid) != 0) {
+			TagMessClosed tagMessClosed = new TagMessClosed();
+			tagMessClosed.setFrom("system");
+			tagMessClosed.setTo(message.getFrom());
+			tagMessClosed.setCloseMessUid(tagMessUid);
+			clientSocket.sendData(tagMessClosed);
+			return;
+		}
+		new MessageDao().insertMesage(message);
+		transmitSingle(message, message.getTo(), getChatRoomUid(message));
 	}
 
 	private void transmitMultiply(ChatMessage message) {
@@ -119,7 +142,8 @@ public class UserMessageTransmitor {
 		if(to== null || "".equals(to)) {
 			return null;
 		}
-		if(chatType == ServerConstant.CHAT_TYPE_SINGLE) {
+		if(chatType == ServerConstant.CHAT_TYPE_SINGLE || 
+				chatType == ServerConstant.CHAT_TYPE_PRIVATE_TAGMESS) {
 			return from.compareTo(to) >= 0 ? (from + "_" + to) : (to + "_" + from);
 		}else {
 			return to;

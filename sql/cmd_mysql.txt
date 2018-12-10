@@ -31,8 +31,31 @@ select column_name, column_comment from information_schema.columns where table_s
 #修改表结构
 alter table 表名 modify column 字段名 类型;
 
+#删除列
+alter table 表名 drop column 列名;
+
 #字符串拼接
 select concat('11','22','33');
+
+#取消外键关联 0：不关联；1：关联
+SET FOREIGN_KEY_CHECKS = 0;
+
+#添加主键
+alter table user_message add column id int not null primary key auto_increment FIRST;
+
+【小结：删除外键分三步】
+【1】show create table 数据表名;
+【2】找到CONSTRAINT `外键名` FOREIGN KEY (`xxxx`) REFERENCES `xxxxxx` (`id`)
+【3】alter table table_name drop foreign key 外键名;   
+
+#删除主键【如果这个主键是自增的，先取消自增长.】
+alter table message drop primary key;
+
+#添加索引
+ALTER TABLE user_message ADD INDEX index_room_uid(chat_room_uid);
+
+#获取group_concat长度限制
+show variables like "group_concat_max_len";
 
 
 
