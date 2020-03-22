@@ -1,6 +1,8 @@
 package com.pojul.fastIM.entity;
 
+import java.security.KeyStore.PrivateKeyEntry;
 import java.sql.ResultSet;
+import java.util.List;
 
 import com.pojul.objectsocket.utils.Constant;
 
@@ -12,6 +14,8 @@ public class ExtendUploadPic extends UploadPic{
     private String userName;
     private String nickName;
     private int age;
+    private List<PicComment> picComments;
+    private int comments;
 
     public String getGalleryType() {
         return galleryType;
@@ -61,6 +65,22 @@ public class ExtendUploadPic extends UploadPic{
         this.age = age;
     }
 
+	public List<PicComment> getPicComments() {
+		return picComments;
+	}
+
+	public void setPicComments(List<PicComment> picComments) {
+		this.picComments = picComments;
+	}
+
+	public int getComments() {
+		return comments;
+	}
+
+	public void setComments(int comments) {
+		this.comments = comments;
+	}
+
 	@Override
 	public void setBySql(ResultSet rs) {
 		// TODO Auto-generated method stub
@@ -76,6 +96,7 @@ public class ExtendUploadPic extends UploadPic{
 		userName = getString(rs, "user_name");
 		nickName = getString(rs, "nick_name");
 		age = getInt(rs, "age");
+		comments = getInt(rs, "comments");
 	}
     
 }

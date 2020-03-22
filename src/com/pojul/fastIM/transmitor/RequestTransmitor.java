@@ -30,7 +30,10 @@ public class RequestTransmitor {
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			LogUtil.i(getClass().getName(), "no RequestProcessor found: " + e.getMessage());
-			LogUtil.dStackTrace(e);
+			if(e instanceof ClassNotFoundException) {
+			}else {
+			}
+			//LogUtil.dStackTrace(e);
 		}
 	}
 	
@@ -99,6 +102,17 @@ public class RequestTransmitor {
 		put("GetNewVersionReq", GetNewVersionProcessor.class.getName());
 		put("MakeQRCodeReq", MakeQRCodeProcessor.class.getName());
 		put("ClaimCommunReq", ClaimCommunProcessor.class.getName());
+		put("GetRecomdPicReq", GetRecomdPicProcessor.class.getName());
+		put("PicCommentReq", PicCommentProcessor.class.getName());
+		put("GetPicTopCommentsReq", GetPicTopCommentsProcessor.class.getName());
+		put("GetPicCommentsReq", GetPicCommentsProcessor.class.getName());
+		put("CommentThumbupReq", CommentThumbupProcessor.class.getName());
+		put("GetCommuDetailReq", GetCommuDetailProcessor.class.getName());
+		put("EditCommuDetailReq", EditCommuDetailProcessor.class.getName());
+		put("EditCommuPhoneReq", EditCommuPhoneProcessor.class.getName());
+		put("EditCommuPhotoReq", EditCommuPhotoProcessor.class.getName());
+		put("FellowCommuReq", FellowCommuProcessor.class.getName());
+		put("SetNotLevelReq", SetNotLevelProcessor.class.getName());
 	}};
 	
 }

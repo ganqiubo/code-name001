@@ -2,10 +2,13 @@ package com.pojul.fastIM.requestprocessor;
 
 import java.util.List;
 
+import com.pojul.fastIM.dao.PicCommentDao;
 import com.pojul.fastIM.dao.UploadPicDao;
+import com.pojul.fastIM.entity.PicComment;
 import com.pojul.fastIM.entity.ThirdPicLikes;
 import com.pojul.fastIM.message.request.ThirdPicLikesCountReq;
 import com.pojul.fastIM.message.response.ThirdPicLikesCountResp;
+import com.pojul.fastIM.utils.DaoUtil;
 import com.pojul.objectsocket.message.RequestMessage;
 import com.pojul.objectsocket.socket.ClientSocket;
 
@@ -38,6 +41,13 @@ public class ThirdPicLikesCountProcessor implements RequestProcessor{
 			response.setMessage("fail");
 			clientSocket.sendData(response);
 		}else {
+			/*if("unsplash".equals(req.getGallery())) {
+				for (int i = 0; i < thirdPicLikes.size(); i++) {
+					ThirdPicLikes thirdPicLike = thirdPicLikes.get(i);
+					List<PicComment> picComments = new PicCommentDao().getTop3Comments(thirdPicLike.getUid(), req.getFrom());
+					thirdPicLike.setPicComments(picComments);
+				}
+			}*/
 			response.setCode(200);
 			response.setMessage("success");
 			response.setThirdPicLikes(thirdPicLikes);

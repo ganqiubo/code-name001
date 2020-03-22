@@ -14,5 +14,10 @@ create table friend(
 #insert into friend(friend_uid, frienda_user_name, friendb_user_name) values('Tony_Lucy', 'Tony', 'Lucy');
 
 
+alter table friend modify friend_uid varchar(40);
+alter table friend modify frienda_user_name varchar(40);
+alter table friend modify friendb_user_name varchar(40);
+
+
 #select a.* from users as a INNER JOIN friend as b on ((a.user_name = b.frienda_user_name and b.friendb_user_name = 'root') or  (a.user_name = b.friendb_user_name and b.frienda_user_name = 'root'));
 #select a.*, count(c.user_message_uid) as unsend_message from ( select a.* from users as a INNER JOIN friend as b on ((a.user_name = b.frienda_user_name and b.friendb_user_name = 'root') or  (a.user_name = b.friendb_user_name and b.frienda_user_name = 'root')) ) as a LEFT JOIN user_message as c on (a.user_name = c.from_user and c.to_user = 'root' and c.is_send = '0') group by a.user_name;

@@ -9,11 +9,14 @@ import com.pojul.fastIM.entity.LoginStatus;
 import com.pojul.fastIM.entity.LoginToken;
 import com.pojul.fastIM.entity.StringVal;
 import com.pojul.fastIM.entity.User;
+import com.pojul.fastIM.message.other.NotifyManagerNotify;
 import com.pojul.fastIM.message.request.LoginMessage;
 import com.pojul.fastIM.utils.ArrayUtil;
 import com.pojul.fastIM.utils.DaoUtil;
 import com.pojul.fastIM.utils.DateUtil;
 import com.pojul.objectsocket.utils.Constant;
+import com.pojul.objectsocket.utils.EncryptionUtil;
+import com.pojul.objectsocket.utils.UidUtil;
 import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 public class UserDao {
@@ -333,4 +336,41 @@ public class UserDao {
 		return DaoUtil.executeUpdate(sql, false);
 	}
 	
+	public String[] createCommunManager(String communityRoomUid) {
+		//String nickName, String imei, String imsi, String birthday, int birthdayType,
+		//int sex, String passwd
+		String nickName = communityRoomUid.replace("_", "") + "管理员";
+		String imei = 000000 + "";
+		String imsi = System.currentTimeMillis() + "";
+		String birthday = DateUtil.getFormatDate().split(" ")[0];
+		int birthdayType = 0;
+		int sex = 1;
+		String passwdRaw = UidUtil.getRandomPasswd();
+		String passwd = EncryptionUtil.md5Encryption(passwdRaw);
+		if(!"success".equals(register(nickName, imei, imsi, birthday, birthdayType, sex, passwd))) {
+			return null;
+		}
+		String sql = "update community_room set manager = '" + imsi + "', hsa_claimed = 1 "
+				+ "where community_uid = '" + communityRoomUid + "'";
+		if(DaoUtil.executeUpdate(sql, false) < 0) {
+			return null;
+		}
+		return new String[] {imsi, passwdRaw};
+	}
+	
+	public List<StringVal> getManagerNotifyUsers(String commuUid, int level){
+		String sql = "select user_name as value from community_room_follows where "
+				+ "community_uid = '" + commuUid + "' and notify_level >= " + level;
+		return DaoUtil.executeQuery(sql, StringVal.class);
+	}
+	
+	public boolean isCommunityManager(String userName){
+		String sql = "select count(*) as num from community_room where manager = '" + userName + "'";
+		List<Count> counts = DaoUtil.executeQuery(sql, Count.class);
+		if(counts == null || counts.size()<=0 || counts.get(0).getNum()<=0) {
+			return false;
+		}
+		return true;
+	}
+
 }

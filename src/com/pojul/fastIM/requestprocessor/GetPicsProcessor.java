@@ -2,8 +2,11 @@ package com.pojul.fastIM.requestprocessor;
 
 import java.util.List;
 
+import com.pojul.fastIM.dao.PicCommentDao;
 import com.pojul.fastIM.dao.UploadPicDao;
 import com.pojul.fastIM.entity.ExtendUploadPic;
+import com.pojul.fastIM.entity.PicComment;
+import com.pojul.fastIM.entity.ThirdPicLikes;
 import com.pojul.fastIM.entity.UploadPic;
 import com.pojul.fastIM.message.request.GetPicsReq;
 import com.pojul.fastIM.message.response.GetPicsResp;
@@ -31,6 +34,11 @@ public class GetPicsProcessor implements RequestProcessor{
 		List<ExtendUploadPic> uploadPics = new UploadPicDao().getPics(req.getFromId(), req.getPicFilter(), 
 				req.getStartNum(), req.getNum(), req.isChoice());
 		if(uploadPics != null) {
+			/*for (int i = 0; i < uploadPics.size(); i++) {
+				ExtendUploadPic uploadPic = uploadPics.get(i);
+				List<PicComment> picComments = new PicCommentDao().getTop3Comments((uploadPic.getId() + ""), req.getFrom());
+				uploadPic.setPicComments(picComments);
+			}*/
 			response.setCode(200);
 			response.setMessage("success");
 			response.setUploadPics(uploadPics);

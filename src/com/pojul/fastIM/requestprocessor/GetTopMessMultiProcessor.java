@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.pojul.fastIM.dao.CommunityMessEntityDao;
 import com.pojul.fastIM.entity.CommunityMessEntity;
+import com.pojul.fastIM.entity.CommunityRoom;
 import com.pojul.fastIM.message.request.GetTopMessMultiReq;
 import com.pojul.fastIM.message.response.GetTopMessMultiResp;
 import com.pojul.objectsocket.message.RequestMessage;
@@ -18,8 +19,9 @@ public class GetTopMessMultiProcessor implements RequestProcessor{
 		GetTopMessMultiResp response = new GetTopMessMultiResp();
 		response.setMessageUid(req.getMessageUid());
 		
-		List<CommunityMessEntity> communityMessEntities = new CommunityMessEntityDao()
-				.getTopMessMulti(req.getCommunityUids(), req.getNum());
+		CommunityMessEntityDao dao = new CommunityMessEntityDao();
+		List<CommunityMessEntity> communityMessEntities = dao.getTopMessMulti(req.getCommunityUids(), req.getNum());
+		List<CommunityRoom> communityRooms = dao.getCommunityRooms(req.getCommunityUids());
 		if(communityMessEntities == null) {
 			response.setCode(101);
 			response.setMessage("fail");
@@ -28,6 +30,7 @@ public class GetTopMessMultiProcessor implements RequestProcessor{
 			response.setCode(200);
 			response.setMessage("sucess");
 			response.setCommunityMessEntities(communityMessEntities);
+			response.setCommunityRooms(communityRooms);
 			clientSocket.sendData(response);
 
 		}

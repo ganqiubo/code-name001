@@ -4,6 +4,9 @@ create table upload_pic_liked_third(
 	gally varchar(20) not null COMMENT '图库',
 	url varchar(400) not null COMMENT '图片url',
 	user_name varchar(20) not null COMMENT '喜欢用户名'
+	/*upload_user_name varchar(20) not null COMMENT '上传用户名',
+	upload_user_photo varchar(400) not null COMMENT '上传用户头像',
+	upload_place varchar(80) not null COMMENT '图片位置'*/
 );
 
 alter table upload_pic_liked_third modify column url varchar(400) not null COMMENT '图片url';

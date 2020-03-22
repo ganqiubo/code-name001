@@ -1,6 +1,7 @@
 package com.pojul.fastIM.entity;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 public class ThirdPicLikes extends BaseEntity{
 
@@ -12,6 +13,8 @@ public class ThirdPicLikes extends BaseEntity{
     private int hasThumbuped;
     private int thumbupNum;
     private String gallery;
+    private List<PicComment> picComments;
+    private int comments;
 
     public String getUserName() {
         return userName;
@@ -77,6 +80,23 @@ public class ThirdPicLikes extends BaseEntity{
         this.gallery = gallery;
     }
 
+    
+	public List<PicComment> getPicComments() {
+		return picComments;
+	}
+
+	public void setPicComments(List<PicComment> picComments) {
+		this.picComments = picComments;
+	}
+
+	public int getComments() {
+		return comments;
+	}
+
+	public void setComments(int comments) {
+		this.comments = comments;
+	}
+
 	@Override
 	public void setBySql(ResultSet rs) {
 		// TODO Auto-generated method stub
@@ -92,6 +112,7 @@ public class ThirdPicLikes extends BaseEntity{
 		hasThumbuped = getInt(rs, "has_thumbuped");
 		thumbupNum = getInt(rs, "thumbup_num");
 		gallery = getString(rs, "gally");
+		comments = getInt(rs, "comments");
 	}
     
 }

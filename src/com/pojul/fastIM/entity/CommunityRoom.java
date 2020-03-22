@@ -2,6 +2,8 @@ package com.pojul.fastIM.entity;
 
 
 import com.google.gson.Gson;
+import com.pojul.objectsocket.utils.Constant;
+
 import java.sql.ResultSet;
 
 public class CommunityRoom extends BaseEntity{
@@ -26,6 +28,9 @@ public class CommunityRoom extends BaseEntity{
     private String manager;
     private String phone;
     private int hsaClaimed;
+    private int follows;
+    private int hasFollowed;
+    private int notifyLevel;
 
     public long getId() {
         return id;
@@ -192,6 +197,22 @@ public class CommunityRoom extends BaseEntity{
         return new Gson().toJson(this);
     }
 
+	public int getFollows() {
+		return follows;
+	}
+
+	public void setFollows(int follows) {
+		this.follows = follows;
+	}
+
+	public int getHasFollowed() {
+		return hasFollowed;
+	}
+
+	public void setHasFollowed(int hasFollowed) {
+		this.hasFollowed = hasFollowed;
+	}
+
 	@Override
 	public void setBySql(ResultSet rs) {
 		// TODO Auto-generated method stub
@@ -214,9 +235,15 @@ public class CommunityRoom extends BaseEntity{
 		latitude = getDouble(rs, "latitude");
 		altitude = getDouble(rs, "altitude");
 		photo = getString(rs, "photo");
+		if(photo != null && !photo.isEmpty()) {
+			photo = (Constant.BASE_URL + photo);
+		}
 	    detail = getString(rs, "detail");
 	    manager = getString(rs, "manager");
 	    phone = getString(rs, "phone");
 	    hsaClaimed = getInt(rs, "hsa_claimed");
+	    follows = getInt(rs, "follows");
+	    hasFollowed = getInt(rs, "has_followed");
+	    notifyLevel = getInt(rs, "notify_level");
 	}
 }

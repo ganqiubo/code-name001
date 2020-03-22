@@ -14,6 +14,13 @@ public class UidUtil {
 			, "x", "y", "z", "1" ,"2" ,"3", "4" , "5", "6", "7" , "8"
 			, "9", "0", "+", "-" ,"=" ,"<" , ">" , "?", "[", "]" , "~"};
 	
+	private static final String[] letters1 = {"a", "b", "c", "d", "e" ,"f" ,"g" , "h" , "i", "j", "k" , "l"
+			, "m", "n", "o", "p" ,"q" ,"r" , "s" , "t", "u", "v" , "w"
+			, "x", "y", "z", "1" ,"2" ,"3", "4" , "5", "6", "7" , "8"
+			, "9", "0", "A", "B", "C", "D", "E" ,"F" ,"G" , "H" , "I", "J", "K" , "L"
+			, "M", "N", "O", "P" ,"Q" ,"R" , "S" , "T", "U", "V" , "W"
+			, "X", "Y", "Z"};
+	
 	public static String getMessageUid(String from) {
 		return System.currentTimeMillis() + "_" + from + "_" + (int)(Math.random()*20);
 	}
@@ -57,6 +64,15 @@ public class UidUtil {
 		String rawTokenId = sb.toString() + System.currentTimeMillis();
 		String tokenId = EncryptionUtil.md5Encryption(rawTokenId);
 		return tokenId;
+	}
+	
+	public static String getRandomPasswd(){
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i< 8; i++) {
+			int random = new Random().nextInt(letters1.length);
+			sb.append(letters1[random]);
+		}
+		return sb.toString();
 	}
 	
 }

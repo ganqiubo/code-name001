@@ -29,4 +29,8 @@ alter table community_room add column manager varchar(40) not null default '' CO
 alter table community_room add column phone varchar(20) not null default '' COMMENT '联系电话';
 alter table community_room add column hsa_claimed int(4) not null default 0 comment '社区是否被认领';
 
+select count(*) as num from community_room where manager = '';
+
 select a.* from community_room as a inner join community_message as b on a.community_uid = b.community_uid and b.message_uid = '1534156408186_Lucy_2';
+
+select *, (select count(*) from community_room_follows where user_name = '' and community_uid = '') as has_followed from community_room where community_uid = '';

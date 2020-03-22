@@ -171,6 +171,7 @@ public class UploadPicDao {
 			}
 			sql = "select * from " + 
 					"(select c.*, d.sex, d.photo, d.user_name, d.nick_name, d.age , " + 
+					"(select count(*) from pic_comment where comment_level = 0 and upload_pic_id = c.id) as comments, " + 
 					"(select GROUP_CONCAT(concat(id, '*', upload_pic_id, '*', upload_pic_url, '*', width, '*', height) SEPARATOR ';') from pic where upload_pic_id = c.id) as pics_str, " + 
 					"(select GROUP_CONCAT(label SEPARATOR ',') from upload_pic_labels where upload_pic_id = c.id) as upload_pic_label, " + 
 					"(select count(*) from upload_pic_like where upload_pic_id = c.id and like_user_id = " + fromId + ") as has_liked, " + 
@@ -183,6 +184,7 @@ public class UploadPicDao {
 		}else {
 			sql = "select * from " + 
 					"(select c.*, d.sex, d.photo, d.user_name, d.nick_name, d.age , " + 
+					"(select count(*) from pic_comment where comment_level = 0 and upload_pic_id = c.id) as comments, " + 
 					"(select GROUP_CONCAT(concat(id, '*', upload_pic_id, '*', upload_pic_url, '*', width, '*', height) SEPARATOR ';') from pic where upload_pic_id = c.id) as pics_str, " + 
 					"(select GROUP_CONCAT(label SEPARATOR ',') from upload_pic_labels where upload_pic_id = c.id) as upload_pic_label, " + 
 					"(select count(*) from upload_pic_like where upload_pic_id = c.id and like_user_id = " + fromId + ") as has_liked, " + 
@@ -240,6 +242,7 @@ public class UploadPicDao {
 						"(select count(*) from upload_pic_collect_third where collect_uid = '" + uid + "' and user_name = '" + from + "') as has_collected, " + 
 						"(select count(*) from upload_pic_thumbup_third where thumbup_uid = '" + uid + "' and user_name = '" + from + "') as has_thumbuped, " + 
 						"(select count(*) from upload_pic_thumbup_third where thumbup_uid = '" + uid + "') as thumbup_num, " + 
+						"(select count(*) from pic_comment where comment_level = 0 and upload_pic_id = '" + uid + "') as comments, " + 
 						"'" + from + "' as user_name, " + 
 						"'unsplash' as gally, " + 
 						"'' as url, " + 

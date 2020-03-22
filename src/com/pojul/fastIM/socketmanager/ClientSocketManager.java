@@ -1,5 +1,6 @@
 package com.pojul.fastIM.socketmanager;
 
+import java.io.File;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import com.google.gson.JsonSyntaxException;
 import com.mysql.jdbc.log.LogUtils;
 import com.pojul.fastIM.dao.AddFriendDao;
 import com.pojul.fastIM.dao.CommunityRoomDao;
+import com.pojul.fastIM.dao.ManageNotifyUsersDao;
 import com.pojul.fastIM.dao.NotifyReplyMessDao;
 import com.pojul.fastIM.dao.RecommendDao;
 import com.pojul.fastIM.dao.ReplyMessageDao;
@@ -31,7 +33,9 @@ import com.pojul.fastIM.message.other.NotifyAcceptFriend;
 import com.pojul.fastIM.message.other.NotifyChatClosed;
 import com.pojul.fastIM.message.other.NotifyFriendReq;
 import com.pojul.fastIM.message.other.NotifyHasRecommend;
+import com.pojul.fastIM.message.other.NotifyManagerNotify;
 import com.pojul.fastIM.message.other.NotifyReplyMess;
+import com.pojul.fastIM.message.request.EditCommuPhotoReq;
 import com.pojul.fastIM.message.request.GetFriendsRequest;
 import com.pojul.fastIM.message.request.LoginByTokenReq;
 import com.pojul.fastIM.message.request.LoginMessage;
@@ -52,8 +56,11 @@ import com.pojul.objectsocket.message.StringFile;
 import com.pojul.objectsocket.socket.ClientSocket;
 import com.pojul.objectsocket.socket.SocketReceiver;
 import com.pojul.objectsocket.socket.SocketSender;
+import com.pojul.objectsocket.utils.Constant;
 import com.pojul.objectsocket.utils.LogUtil;
 import com.pojul.objectsocket.utils.UidUtil;
+
+import sun.util.logging.resources.logging;
 
 public class ClientSocketManager {
 
@@ -268,6 +275,13 @@ public class ClientSocketManager {
 			mess.setToUserName(mClientSocket.getChatId());
 			mClientSocket.sendData(mess);
 		}
+		
+		NotifyManagerNotify notify = new ManageNotifyUsersDao().getUnSendManagerNotify(mClientSocket.getChatId());
+		if(notify != null) {
+			notify.setFrom(notify.getManager());
+			notify.setTo(notify.getUserName());
+			mClientSocket.sendData(notify);
+		}
 	}
 	
 
@@ -283,13 +297,15 @@ public class ClientSocketManager {
 			public void onReadHead(MessageHeader header) {
 				// TODO Auto-generated method stub
 				if (UploadPicReq.class.getName().equals(header.getClassName())) {
-					//mClientSocket.setSaveFilePath("D:\\websource\\uploadPic\\", "http://192.168.0.106:8080/resources/uploadPic/");
-					mClientSocket.setSaveFilePath("/root/websource/uploadPic/", "http://47.93.31.206:8080/resources/uploadPic/");
-				} else if(UpdateUserPhotoReq.class.getName().equals(header.getClassName())){
-					//mClientSocket.setSaveFilePath("D:\\websource\\photo\\", "photo/");
-					mClientSocket.setSaveFilePath("/root/websource/photo/", "photo/");
+					mClientSocket.setSaveFilePath((Constant.BASE_LOCAL_PATH + "uploadPic" + File.separator), Constant.BASE_URL + "uploadPic/");
+					//mClientSocket.setSaveFilePath("/root/websource/uploadPic/", "http://47.93.31.206:8080/resources/uploadPic/");
+				} else if(UpdateUserPhotoReq.class.getName().equals(header.getClassName())
+						|| EditCommuPhotoReq.class.getName().equals(header.getClassName())){
+					mClientSocket.setSaveFilePath(Constant.USER_PHOTO_PATH, "photo/");
+					//mClientSocket.setSaveFilePath("/root/websource/photo/", "photo/");
 				}else {
-					mClientSocket.setSaveFilePath("/root/websource/", "http://47.93.31.206:8080/resources/");
+					mClientSocket.setSaveFilePath(Constant.BASE_LOCAL_PATH, Constant.BASE_URL);
+					//mClientSocket.setSaveFilePath("/root/websource/", "http://47.93.31.206:8080/resources/");
 				}
 			}
 
@@ -382,6 +398,8 @@ public class ClientSocketManager {
 					}else if(mess.getRecommendtype() == 2) {
 						new RecommendDao().updateUserNotified(mess.getToUserName());
 					}
+				}else if(mBaseMessage instanceof NotifyManagerNotify) {
+					new ManageNotifyUsersDao().clearNotify(mClientSocket.getChatId());
 				}
 			}
 			

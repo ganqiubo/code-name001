@@ -8,6 +8,7 @@ import org.apache.tomcat.jni.File;
 
 import com.pojul.fastIM.dao.CommunityMessEntityDao;
 import com.pojul.fastIM.dao.CommunityRoomDao;
+import com.pojul.fastIM.dao.ManageNotifyUsersDao;
 import com.pojul.fastIM.dao.NotifyReplyMessDao;
 import com.pojul.fastIM.dao.RecommendDao;
 import com.pojul.fastIM.dao.ReplyMessageDao;
@@ -15,6 +16,7 @@ import com.pojul.fastIM.dao.SubReplyMessageDao;
 import com.pojul.fastIM.dao.UserDao;
 import com.pojul.fastIM.dao.UserFilterDao;
 import com.pojul.fastIM.entity.ReplyReqUsers;
+import com.pojul.fastIM.entity.StringVal;
 import com.pojul.fastIM.entity.TagMessInfo;
 import com.pojul.fastIM.entity.User;
 import com.pojul.fastIM.message.chat.ChatMessage;
@@ -23,6 +25,7 @@ import com.pojul.fastIM.message.chat.ReplyMessage;
 import com.pojul.fastIM.message.chat.SubReplyMessage;
 import com.pojul.fastIM.message.chat.TagCommuMessage;
 import com.pojul.fastIM.message.other.NotifyHasRecommend;
+import com.pojul.fastIM.message.other.NotifyManagerNotify;
 import com.pojul.fastIM.message.other.NotifyReplyMess;
 import com.pojul.fastIM.socketmanager.ClientSocketManager;
 import com.pojul.fastIM.utils.DateUtil;
@@ -88,6 +91,61 @@ public class CommunityMessTransmitor {
 						}
 					}
 				}
+			}
+		}
+		
+		checkManagerNotify(message);
+		
+	}
+
+	private void checkManagerNotify(TagCommuMessage message) {
+		// TODO Auto-generated method stub
+		/*if(message.getLabels() == null) {
+			return;
+		}
+		boolean isNotifyMess = false;
+		for (int i = 0; i < message.getLabels().size(); i++) {
+			if("公告通知".equals(message.getLabels().get(i))) {
+				isNotifyMess = true;
+				break;
+			}
+		}
+		if(!isNotifyMess) {
+			return;
+		}
+		if(new CommunityRoomDao().isManager(message.getFrom(), message.getuid)) {
+			
+		}*/
+		if(!message.isManagerNotrify()) {
+			return;
+		}
+		List<StringVal> users = new UserDao().getManagerNotifyUsers(message.getTo(), message.getLevel());
+		NotifyManagerNotify notify = new NotifyManagerNotify();
+		notify.setFrom(message.getFrom());
+		notify.setManager(message.getFrom());
+		notify.setManagerNickname(message.getNickName());
+		notify.setCommuRoomUid(message.getTo());
+		notify.setMessUid(message.getMessageUid());
+		notify.setMessageTitle(message.getTitle());
+		notify.setTimeMill(System.currentTimeMillis());
+		notify.setManagerPhoto(message.getPhoto().getFilePath());
+		for (int i = 0; i < users.size(); i++) {
+			String user = users.get(i).getValue();
+			notify.setTo(user);
+			notify.setUserName(user);
+			if(message.getFrom().equals(user)) {
+				continue;
+			}
+			HashMap<String, ClientSocket> mClientSockets = ClientSocketManager.clientSockets.get(user);
+			if(mClientSockets != null && mClientSockets.size() > 0) {
+				for (Entry<String, ClientSocket> entity : mClientSockets.entrySet()) {
+					ClientSocket mClientSocket = entity.getValue();
+					if(mClientSocket != null) {
+						mClientSocket.sendData(notify);
+					}
+				}
+			}else {
+				new ManageNotifyUsersDao().insertNotify(notify);
 			}
 		}
 	}

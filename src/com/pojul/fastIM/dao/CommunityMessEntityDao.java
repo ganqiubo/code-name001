@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.pojul.fastIM.entity.CheckTagEffictive;
 import com.pojul.fastIM.entity.CommunityMessEntity;
+import com.pojul.fastIM.entity.CommunityRoom;
 import com.pojul.fastIM.entity.LatLonRange;
 import com.pojul.fastIM.entity.MessageFilter;
 import com.pojul.fastIM.message.chat.CommunityMessage;
@@ -191,7 +192,7 @@ public class CommunityMessEntityDao {
 			sqls[i] = sql;
 		}
 		List<CommunityMessEntity> communityMessEntities = DaoUtil.executeQueryMulti(sqls, CommunityMessEntity.class);
-		if(communityMessEntities == null || communityMessEntities.size() <= 0) {
+		if(communityMessEntities == null) {
 			return null;
 		}else {
 			return communityMessEntities;
@@ -267,6 +268,23 @@ public class CommunityMessEntityDao {
 		}
 		endSql = " order by " + orderTableName + ".distance, " + orderTableName + ".id desc limit " + startNum + ", " + num + ") as end_tab";
 		return startSql + middleSql + endSql;
+	}
+
+	public List<CommunityRoom> getCommunityRooms(List<String> communityUids) {
+		// TODO Auto-generated method stub
+		String[] sqls = new String[communityUids.size()];
+		for (int i = 0; i < communityUids.size(); i++) {
+			String sql = "select a.*, " + 
+					"(select count(*) from community_room_follows where community_uid = a.community_uid) as follows " + 
+					"from community_room as a where a.community_uid = '" + communityUids.get(i)+ "'";
+			sqls[i] = sql;
+		}
+		List<CommunityRoom> communityRooms = DaoUtil.executeQueryMulti(sqls, CommunityRoom.class);
+		if(communityRooms == null) {
+			return null;
+		}else {
+			return communityRooms;
+		}
 	}
 	
 	
