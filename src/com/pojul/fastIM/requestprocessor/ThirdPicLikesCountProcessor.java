@@ -28,9 +28,10 @@ public class ThirdPicLikesCountProcessor implements RequestProcessor{
 			clientSocket.sendData(response);
 			return;
 		}
-		if(!"unsplash".equals(req.getGallery()) && !"pexels".equals(req.getGallery())) {
+		if(!"unsplash".equals(req.getGallery()) && !"pexels".equals(req.getGallery()) 
+				 && !"pixabay".equals(req.getGallery()) ) {
 			response.setCode(101);
-			response.setMessage("fail");
+			response.setMessage("不支持图库类型");
 			clientSocket.sendData(response);
 			return;
 		}

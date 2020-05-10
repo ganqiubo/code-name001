@@ -21,9 +21,10 @@ public class ThumbupUploadPicProcessor implements RequestProcessor{
 			clientSocket.sendData(response);
 			return;
 		}
-		if(!"脚步".equals(req.getGallery()) && !"unsplash".equals(req.getGallery()) && !"pexels".equals(req.getGallery())) {
+		if(!"脚步".equals(req.getGallery()) && !"unsplash".equals(req.getGallery()) && !"pexels".equals(req.getGallery())
+				&& !"pixabay".equals(req.getGallery())) {
 			response.setCode(101);
-			response.setMessage("fail");
+			response.setMessage("不支持图库类型");
 			clientSocket.sendData(response);
 			return;
 
@@ -34,8 +35,9 @@ public class ThumbupUploadPicProcessor implements RequestProcessor{
 			result = new UploadPicDao().thumbupUploadPic(req.getThumbupUpUserId(), req.getUploadPicId());
 			break;
 		case "unsplash":
+		case "pixabay":
 			result = new UploadPicDao().thumbupUploadPicUnsplash(req.getFrom(),
-					req.getUrl(), req.getUid());
+					req.getUrl(), req.getUid(), req.getGallery());
 			break;
 		case "pexels":
 			result = new UploadPicDao().thumbupUploadPicPexels(req.getFrom(),

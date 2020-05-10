@@ -198,18 +198,18 @@ public class UploadPicDao {
 		return uploadPics;
 	}
 
-	public long likeUploadPicUnsplash(String from, String url, String uid, int type) {
+	public long likeUploadPicUnsplash(String from, String url, String uid, int type, String gallery) {
 		String sql = "";
 		// TODO Auto-generated method stub
 		if(type == 0) {
 			sql = "insert into upload_pic_liked_third(like_uid, gally, url, user_name) values("
 					+ "'" + uid + "', " 
-					+ "'unsplash', " 
+					+ "'" + gallery + "', " 
 					+ "'" + url + "', " 
 					+ "'" + from + "'" 
 					+ ")";
 		}else {
-			sql = "delete from upload_pic_liked_third where like_uid = '" + uid + "' and gally = 'unsplash'";
+			sql = "delete from upload_pic_liked_third where like_uid = '" + uid + "' and gally = '"+ gallery+"'";
 		}
 		return DaoUtil.executeUpdate(sql, false);
 	}
@@ -231,7 +231,7 @@ public class UploadPicDao {
 	public List<ThirdPicLikes> thirdPicLikes(String from, String gallery, List<String> uids, List<String> urls){
 		String[] sqls;
 		List<ThirdPicLikes> thirdPicLikes = null;
-		if("unsplash".equals(gallery)) {
+		if("unsplash".equals(gallery) || "pixabay".equals(gallery)) {
 			if(uids == null) {
 				return null;
 			}
@@ -244,7 +244,7 @@ public class UploadPicDao {
 						"(select count(*) from upload_pic_thumbup_third where thumbup_uid = '" + uid + "') as thumbup_num, " + 
 						"(select count(*) from pic_comment where comment_level = 0 and upload_pic_id = '" + uid + "') as comments, " + 
 						"'" + from + "' as user_name, " + 
-						"'unsplash' as gally, " + 
+						"'"+gallery+"' as gally, " + 
 						"'' as url, " + 
 						"'" + uid + "' as pic_uid";
 				sqls[i] = sql;
@@ -272,19 +272,19 @@ public class UploadPicDao {
 		return thirdPicLikes;
 	}
 
-	public long collectUploadPicUnsplash(String from, String url, String uid, int type) {
+	public long collectUploadPicUnsplash(String from, String url, String uid, int type, String gallery) {
 		// TODO Auto-generated method stub
 		String sql = "";
 		// TODO Auto-generated method stub
 		if(type == 0) {
 			sql = "insert into upload_pic_collect_third(collect_uid, gally, url, user_name) values("
 					+ "'" + uid + "', " 
-					+ "'unsplash', " 
+					+ "'" + gallery + "', " 
 					+ "'" + url + "', " 
 					+ "'" + from + "'"
 					+ ")";
 		}else {
-			sql = "delete from upload_pic_collect_third where collect_uid = '" + uid + "' and gally = 'unsplash'";
+			sql = "delete from upload_pic_collect_third where collect_uid = '" + uid + "' and gally = '"+gallery+"'";
 		}
 		return DaoUtil.executeUpdate(sql, false);
 	}
@@ -304,11 +304,11 @@ public class UploadPicDao {
 		return DaoUtil.executeUpdate(sql, false);
 	}
 
-	public long thumbupUploadPicUnsplash(String from, String url, String uid) {
+	public long thumbupUploadPicUnsplash(String from, String url, String uid, String gallery) {
 		// TODO Auto-generated method stub
 		String sql = "insert into upload_pic_thumbup_third(thumbup_uid, gally, url, user_name) values("
 					+ "'" + uid + "', " 
-					+ "'unsplash', " 
+					+ "'"+gallery+"', " 
 					+ "'" + url + "', " 
 					+ "'" + from + "'"
 					+ ")";

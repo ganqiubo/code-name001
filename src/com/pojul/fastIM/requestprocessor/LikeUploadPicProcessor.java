@@ -24,9 +24,10 @@ public class LikeUploadPicProcessor implements RequestProcessor{
 			clientSocket.sendData(response);
 			return;
 		}
-		if(!"脚步".equals(req.getGallery()) && !"unsplash".equals(req.getGallery()) && !"pexels".equals(req.getGallery())) {
+		if(!"脚步".equals(req.getGallery()) && !"unsplash".equals(req.getGallery()) && !"pexels".equals(req.getGallery())
+				&& !"pixabay".equals(req.getGallery())) {
 			response.setCode(101);
-			response.setMessage("fail");
+			response.setMessage("不支持图库类型");
 			clientSocket.sendData(response);
 			return;
 
@@ -37,8 +38,9 @@ public class LikeUploadPicProcessor implements RequestProcessor{
 			result = new UploadPicDao().likeUploadPic(req.getLikeUserId(), req.getUploadPicId(), req.getType());
 			break;
 		case "unsplash":
+		case "pixabay":
 			result = new UploadPicDao().likeUploadPicUnsplash(req.getFrom(),
-					req.getUrl(), req.getUid(), req.getType());
+					req.getUrl(), req.getUid(), req.getType(), req.getGallery());
 			break;
 		case "pexels":
 			result = new UploadPicDao().likeUploadPicPexels(req.getFrom(),
