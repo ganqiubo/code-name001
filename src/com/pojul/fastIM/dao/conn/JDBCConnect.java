@@ -14,7 +14,7 @@ public class JDBCConnect {
 	    String driver = "com.mysql.jdbc.Driver";
 	    String url = "jdbc:mysql://127.0.0.1:3306/fastim?useSSL=false";
 	    String username = "root";
-	    String password = "7yg257zh";
+	    String password = "o0bp!pqT<1fy";
 	    //String password = "";
 	    Connection conn = null;
 	    try {
